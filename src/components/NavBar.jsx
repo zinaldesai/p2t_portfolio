@@ -1,9 +1,9 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { NavLink } from "react-router-dom"
 import { motion } from "framer-motion";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoMdClose } from "react-icons/io";
-import DownloadResume from "./DownloadResume";
+import Toggle from '../Toggle'
 
 const sidebarVariants = {
   open: {
@@ -28,17 +28,39 @@ const sidebarVariants = {
 
 const NavBar = () => {
   const [open, setOpen] = useState(false);
+  
+  const [toggled, setToggled] = useState(false);
+
+const handleClick = () => {
+  setToggled((s) => !s);
+};
+
+  const openInNewTab = (url) => {
+    window.open(url, "_blank", "noreferrer");
+  };
+
+  useEffect(() => {
+    const mode = toggled ? "dark" : "light";
+    document.body.classList.toggle("dark-mode", toggled);
+    localStorage.setItem("theme", mode);
+  }, [toggled]); 
+
   return (
     <nav className="navigation px-4 py-2">
       <section>
-        <h1 className="text-3xl font-bold">My Portfolio</h1>
+        <h1 className="text-3xl font-bold font-roca">portfolio</h1>
       </section>
-      <section className="lg-links">
+      <section className="lg-links flex">
         <NavLink to="/">Home</NavLink>
-        <NavLink to="/projects">Projects</NavLink>
-        <NavLink to="/contact">Contact</NavLink>
         <NavLink to="/about">About</NavLink>
-        <DownloadResume />
+        <NavLink to="/skills">Skills</NavLink>
+        <NavLink to="/education">Education</NavLink>
+        <NavLink to="/experience">Experience</NavLink>
+        <NavLink to="/projects">Projects</NavLink>
+        <a onClick={() => openInNewTab("https://drive.google.com/file/d/172Avu6C_zNcbjJHD1jwqUkDvIClfBOYq/view?usp=drive_link")} download="Z.Desai-Resume.pdf">Resume</a>
+        <div className="theme-toggle">
+          <Toggle toggled={toggled} onClick={handleClick}/>
+        </div>
       </section>
       <section className="sm-active">
         <button 
@@ -67,12 +89,12 @@ const NavBar = () => {
         </section>
         <NavLink to="/">Home</NavLink>
         <NavLink to="/projects">Projects</NavLink>
-        <NavLink to="/contact">Contact</NavLink>
+        <NavLink to="/experience">Experience</NavLink>
         <NavLink to="/about">About</NavLink>
-        <DownloadResume />
+        <a onClick={() => openInNewTab("https://drive.google.com/file/d/172Avu6C_zNcbjJHD1jwqUkDvIClfBOYq/view?usp=drive_link")} download="Z.Desai-Resume.pdf">Resume</a>
       </motion.aside>
     </nav>
   )
 }
 
-export default NavBar
+export default NavBar;
