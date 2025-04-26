@@ -11,11 +11,11 @@ const openInNewTab = (url) => {
 
 const Home = () => {
   return (
-    <main className="home-container min-h-screen flex flex-col justify-between items-center text-center">
-      <section className="home-subsection flex flex-col items-center justify-center min-h-screen text-center">
-        <h2 className="text-6xl mb-2 font-roca flex justify-center">{fullName}</h2>
+    <main className="home-container min-h-screen flex flex-col justify-between">
+      <section className="home-subsection flex-1 flex flex-col items-center text-center px-4">
+        <h2 className="text-6xl md:text-7xl font-roca mb-4">{fullName}</h2>
         <TypewriterEffect/>
-        <div className="flex links justify-items-center ">
+        <div className="flex gap-10 mt-6 ">
         <a onClick={() => openInNewTab("https://www.linkedin.com/in/zinaldesai/")}>
         <FaLinkedinIn size={35}/>
         </a>
@@ -27,7 +27,7 @@ const Home = () => {
         </a>
         </div>
       </section>
-      <footer className="mb-10">
+      <footer className="text-center">
       <p className="text-xl tracking-wide italic font-decalotype">{personalQuote}</p>
       </footer>
     </main>
