@@ -1,12 +1,12 @@
 body {
-    background-color: white;
-    color: black;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    background-color: whitesmoke;
+    color: rgb(32, 32, 32);
+    transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 body.dark-mode {
-    background-color: black;
-    color: white;
+    background-color: rgb(32, 32, 32);
+    color: whitesmoke;
 }
 
 .theme-toggle {

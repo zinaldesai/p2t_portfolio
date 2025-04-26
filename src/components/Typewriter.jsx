@@ -9,7 +9,7 @@ function TypewriterEffect() {
                     options = {{
                         autoStart: true,
                         loop: true,
-                        delay: 70,
+                        delay: 75,
                         strings: [
                             "I\'m a Full Stack Developer",
                             "I\'m a Software Engineer",

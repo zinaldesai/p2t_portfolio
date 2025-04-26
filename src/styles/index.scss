@@ -1,10 +1,11 @@
 @import '_variables.scss';
 @import 'about.scss';
-@import 'contact.scss';
+@import 'experience.scss';
 @import 'home.scss';
 @import 'not-found.scss';
 @import 'projects.scss';
 @import 'nav-bar.scss';
+@import '../Toggle/style.css';
 
 body {
   margin: 0;
@@ -16,6 +17,7 @@ body {
   height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
+  padding: 5;
   display: flex;
   flex-direction: column;
 }
