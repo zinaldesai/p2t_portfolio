@@ -32,8 +32,8 @@ const experiences = [
 
 export default function ExperienceTimeline() {
   return (
-    <div className="experience-container min-h-screen px-4 md:px-12 lg:px-16 py-10 max-w-5xl mx-auto">
-      <h1 className="page-title text-4xl font-bold mb-12 font-roca text-center mt-10">experience</h1>
+    <div className="experience-container min-h-screen px-4 md:px-12 lg:px-16 py-10 max-w-5xl mx-auto pb-10px">
+      <h1 className="page-title text-4xl font-bold mb-12 font-roca text-center mt-36">experience</h1>
 
       <div className="space-y-16">
         {experiences.map((exp, index) => (

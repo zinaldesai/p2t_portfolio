@@ -9,8 +9,9 @@ const freeTime = 'During my free time, I enjoy baking, cooking, spending time wi
 
 const About = () => {
   return (
-    <main className="about-container min-h-screen px-4 md:px-12 lg:px-16 py-10 max-w-5xl mx-auto">
-      <h1 className="text-4xl font-bold mb-12 font-roca text-center mt-10">about</h1>
+    <main className="about-container min-h-screen md:px-12 lg:px-16 mx-auto">
+      <h1 className="title text-4xl font-bold mb-12 font-roca text-center mt-36">about</h1>
+      <br />
       <section className='about-content-container'>
         <section className='image-container'>
           <img className='grad-pic' src={Image} alt="graduation picture" />

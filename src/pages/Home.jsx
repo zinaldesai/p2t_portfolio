@@ -28,7 +28,7 @@ const Home = () => {
         </div>
       </section>
       <footer className="text-center">
-      <p className="text-xl tracking-wide italic font-decalotype">{personalQuote}</p>
+      <p className="tracking-wide italic font-decalotype">{personalQuote}</p>
       </footer>
     </main>
   )
