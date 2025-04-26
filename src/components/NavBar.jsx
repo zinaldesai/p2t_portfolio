@@ -51,12 +51,12 @@ const handleClick = () => {
         <h1 className="text-3xl font-bold font-roca">portfolio</h1>
       </section>
       <section className="lg-links flex">
-        <NavLink to="/">Home</NavLink>
-        <NavLink to="/about">About</NavLink>
-        <NavLink to="/skills">Skills</NavLink>
-        <NavLink to="/education">Education</NavLink>
-        <NavLink to="/experience">Experience</NavLink>
-        <NavLink to="/projects">Projects</NavLink>
+        <NavLink to="/" end className={({ isActive }) => isActive ? "active" : ""}>Home</NavLink>
+        <NavLink to="/about" className={({ isActive }) => isActive ? "active" : ""}>About</NavLink>
+        <NavLink to="/skills" className={({ isActive }) => isActive ? "active" : ""}>Skills</NavLink>
+        <NavLink to="/education" className={({ isActive }) => isActive ? "active" : ""}>Education</NavLink>
+        <NavLink to="/experience" className={({ isActive }) => isActive ? "active" : ""}>Experience</NavLink>
+        <NavLink to="/projects" className={({ isActive }) => isActive ? "active" : ""}>Projects</NavLink>
         <a onClick={() => openInNewTab("https://drive.google.com/file/d/172Avu6C_zNcbjJHD1jwqUkDvIClfBOYq/view?usp=drive_link")} download="Z.Desai-Resume.pdf">Resume</a>
         <div className="theme-toggle">
           <Toggle toggled={toggled} onClick={handleClick}/>

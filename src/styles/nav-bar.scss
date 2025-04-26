@@ -8,22 +8,57 @@
   position: sticky;
   top: 0;
   z-index: 1;
+
   .lg-links {
     display: none;
     font-size: 1.2rem;
+
     @media screen and (min-width: $laptop) {
       display: flex;
     }
+
     a {
       margin-left: 20px;
+      position: relative;
+      text-decoration: none;
+      color: inherit;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 7px;
+        left: 0;
+        width: 50%;
+        height: 2px;
+        background-color: skyblue;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      &:hover {
+        color: skyblue;
+
+        &::after {
+          opacity: 1;
+          width: 50%;
+        }
+      }
+
+      &.active::after {
+        opacity: 1;
+        width: 100%;
+      }
     }
   }
+
   .sm-active {
     display: flex;
+
     @media screen and (min-width: $laptop) {
       display: none;
     }
   }
+
   .sm-links {
     display: none;
     color: black;
@@ -39,18 +74,22 @@
     width: 200px;
     padding: 20px 10px 0;
     z-index: 99;
+
     a {
       margin: 3px 0;
       font-size: 1.1rem;
     }
   }
+
   .sm-links.active {
     display: flex;
   }
+
   a:hover {
-    color: blue;
-    text-decoration: underline;
+    color: skyblue;
+    text-decoration: none;
   }
+
   button:hover {
     background-color: gray;
     color: white;

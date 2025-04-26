@@ -33,7 +33,7 @@ const experiences = [
 export default function ExperienceTimeline() {
   return (
     <div className="experience-container min-h-screen px-4 md:px-12 lg:px-16 py-10 max-w-5xl mx-auto">
-      <h1 className="page-title text-4xl font-bold mb-12 font-roca text-center mt-10">Experience</h1>
+      <h1 className="page-title text-4xl font-bold mb-12 font-roca text-center mt-10">experience</h1>
 
       <div className="space-y-16">
         {experiences.map((exp, index) => (
@@ -41,19 +41,19 @@ export default function ExperienceTimeline() {
             
             {/* Date */}
             <div className="relative w-full sm:w-40 flex sm:justify-end mb-2 sm:mb-0 pl-1 sm:pl-0">
-              <span className="date bg-midnight text-whitesmoke px-3 py-1 text-xs sm:text-sm rounded whitespace-nowrap">
+              <span className="date bg-midnight text-whitesmoke px-3 py-1 text-xs sm:text-sm rounded whitespace-nowrap font-decalotype tracking-wide">
                 {exp.date}
               </span>
             </div>
 
             {/* Vertical Line */}
-            <div className="line absolute hidden sm:block sm:left-44 top-0 h-full border-l-2"></div>
+            <div className="line absolute hidden sm:block sm:left-44 top-0 h-full border-l-2 "></div>
 
             {/* Experience Content */}
             <div className="flex-1 sm:pl-10">
-              <h3 className="title text-lg sm:text-xl font-semibold">{exp.title}</h3>
-              <p className="company text-sm sm:text-base font-medium mb-3">{exp.company}</p>
-              <ul className="detail list-disc list-inside space-y-2 text-sm sm:text-base">
+              <h3 className="title text-lg sm:text-xl font-semibold font-decalotype tracking-wide">{exp.title}</h3>
+              <p className="company text-sm sm:text-base font-medium mb-3 font-decalotype tracking-wide">{exp.company}</p>
+              <ul className="detail list-disc list-inside space-y-2 text-sm sm:text-base font-decalotype tracking-wide">
                 {exp.details.map((point, i) => (
                   <li key={i}>{point}</li>
                 ))}
