@@ -33,7 +33,7 @@ const experiences = [
 export default function ExperienceTimeline() {
   return (
     <div className="experience-container min-h-screen px-4 md:px-12 lg:px-16 py-10 max-w-5xl mx-auto">
-      <h1 className="page-title text-4xl font-bold mb-12 font-roca text-center">Experience</h1>
+      <h1 className="page-title text-4xl font-bold mb-12 font-roca text-center mt-10">Experience</h1>
 
       <div className="space-y-16">
         {experiences.map((exp, index) => (
@@ -47,7 +47,7 @@ export default function ExperienceTimeline() {
             </div>
 
             {/* Vertical Line */}
-            <div className="line absolute hidden sm:block sm:left-44 top-0 h-full border-l-2 border-spacegray"></div>
+            <div className="line absolute hidden sm:block sm:left-44 top-0 h-full border-l-2"></div>
 
             {/* Experience Content */}
             <div className="flex-1 sm:pl-10">
