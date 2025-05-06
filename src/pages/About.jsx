@@ -16,8 +16,8 @@ const About = () => {
         <section className='image-container'>
           <img className='grad-pic' src={Image} alt="graduation picture" />
         </section>
-        <section className='description-container'>
-          <h2 className='text-xl font-medium'>Hi there! I'm {firstName}, a {jobTitle} from {jobLocation}.</h2>
+        <section className='description-container font-decalotype tracking-wide pb-7'>
+          <h2 className='text-xl font-medium font-decalotype tracking-wide'>Hi there! I'm {firstName}, a {jobTitle} from {jobLocation}.</h2>
           <p>{careerObjective}</p>
           <p>{goals}</p>
           <p>{freeTime}</p>
