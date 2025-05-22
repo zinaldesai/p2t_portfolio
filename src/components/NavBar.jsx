@@ -1,25 +1,25 @@
-import { useState, useEffect } from "react"
+import { useRef, useState, useEffect } from "react"
 import { NavLink } from "react-router-dom"
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoMdClose } from "react-icons/io";
-import { motion, AnimatePresence } from "framer-motion"; // ✅ Add Framer Motion
+import { motion, AnimatePresence } from "framer-motion";
 import Toggle from '../Toggle'
 
 const sidebarVariants = {
-  open: {
-    y: 0,
+  open: (customHeight) => ({
+    height: customHeight,
     opacity: 1,
     transition: {
-      type: 'tween',
       duration: 0.3,
+      ease: "easeInOut",
     },
-  },
+  }),
   closed: {
-    y: "-100%",
+    height: 0,
     opacity: 0,
     transition: {
-      type: 'tween',
       duration: 0.3,
+      ease: "easeInOut",
     },
   },
 };
@@ -27,6 +27,15 @@ const sidebarVariants = {
 const NavBar = () => {
   const [open, setOpen] = useState(false);
   const [toggled, setToggled] = useState(false);
+
+  const menuRef = useRef(null);
+  const [menuHeight, setMenuHeight] = useState(0);
+
+  useEffect(() => {
+    if (menuRef.current) {
+      setMenuHeight(menuRef.current.scrollHeight);
+    }
+  }, [open]);
 
   const handleLinkClick = () => {
     setOpen(false);
@@ -82,22 +91,24 @@ const NavBar = () => {
         </div>
       </section>
 
-      {/* ✅ AnimatePresence & motion.div for animation */}
       <AnimatePresence>
-        {open && (
-          <motion.div
-          className="sm-links"
-          initial="closed"
-          animate="open"
-          exit="closed"
-          variants={sidebarVariants}
+  {open && (
+    <motion.div
+      className="sm-links"
+      custom={menuHeight}
+      initial="closed"
+      animate="open"
+      exit="closed"
+      variants={sidebarVariants}
+      style={{ overflow: "hidden" }}
+    >
+      <div ref={menuRef}>
+        <button
+          type="button"
+          onClick={() => setOpen(false)}
+          className="absolute top-4 right-4 text-whitesmoke"
         >
-          <button
-            type="button"
-            onClick={() => setOpen(false)}
-            className="absolute top-4 right-4 text-whitesmoke"
-          >
-              <IoMdClose size={25} />
+          <IoMdClose size={25} />
             </button>
             <section className="links flex flex-col items-center gap-4">
               <div className={`sm-links ${open ? "active" : ""}`}>
@@ -108,6 +119,7 @@ const NavBar = () => {
               <a onClick={() => openInNewTab("https://drive.google.com/file/d/172Avu6C_zNcbjJHD1jwqUkDvIClfBOYq/view?usp=drive_link")} download="Z.Desai-Resume.pdf">Resume</a>
               </div>
             </section>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
