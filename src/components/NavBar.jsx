@@ -1,7 +1,6 @@
 import { useRef, useState, useEffect } from "react"
 import { NavLink } from "react-router-dom"
 import { GiHamburgerMenu } from "react-icons/gi";
-import { IoMdClose } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
 import Toggle from '../Toggle'
 
@@ -33,7 +32,9 @@ const NavBar = () => {
 
   useEffect(() => {
     if (menuRef.current) {
-      setMenuHeight(menuRef.current.scrollHeight);
+      setTimeout(() => {
+        setMenuHeight(menuRef.current.scrollHeight);
+      }, 0);
     }
   }, [open]);
 
@@ -97,29 +98,26 @@ const NavBar = () => {
       <AnimatePresence>
   {open && (
     <motion.div
-      className="sm-links"
-      custom={menuHeight}
-      initial="closed"
-      animate="open"
-      exit="closed"
-      variants={sidebarVariants}
-      style={{ overflow: "hidden" }}
-    >
-      <div ref={menuRef}>
-        <button
-          type="button"
-          onClick={() => setOpen(false)}
-          className="absolute top-4 right-4 text-whitesmoke"
-        >
-          <IoMdClose size={25} />
-            </button>
-            <section className="links flex flex-col items-center gap-4">
-              <div className={`sm-links ${open ? "active" : ""}`}>
+    className="sm-links"
+    ref={menuRef}
+    custom={menuHeight}
+    initial="closed"
+    animate="open"
+    exit="closed"
+    variants={sidebarVariants}
+    style={{ overflow: "hidden" }}
+  >
+      <div>
+            <section className="links flex flex-col items-center gap-2">
               <NavLink to="/" onClick={handleLinkClick}>Home</NavLink>
-              <NavLink to="/projects" onClick={handleLinkClick}>Projects</NavLink>
-              <NavLink to="/experience" onClick={handleLinkClick}>Experience</NavLink>
               <NavLink to="/about" onClick={handleLinkClick}>About</NavLink>
+              <NavLink to="/skills" onClick={handleLinkClick}>Skills</NavLink>
+              <NavLink to="/education" onClick={handleLinkClick}>Education</NavLink>
+              <NavLink to="/experience" onClick={handleLinkClick}>Experience</NavLink>
+              <NavLink to="/projects" onClick={handleLinkClick}>Projects</NavLink>     
               <a onClick={() => openInNewTab("https://drive.google.com/file/d/172Avu6C_zNcbjJHD1jwqUkDvIClfBOYq/view?usp=drive_link")} download="Z.Desai-Resume.pdf">Resume</a>
+              <div className="theme-toggle">
+                <Toggle toggled={toggled} onClick={handleClick}/>
               </div>
             </section>
             </div>

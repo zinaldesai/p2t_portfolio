@@ -10,11 +10,12 @@ body.dark-mode {
 }
 
 .theme-toggle {
-    margin-left: 20px;
-    height: 30px;
-    width: 60px;
+    height: 23px;
+    width: 45px;
     display: flex;
     align-items: center;
+    justify-content: center;
+    margin-top: 2px;
   }
   
 .theme-toggle .toggle {
@@ -33,13 +34,13 @@ body.dark-mode {
 }
 
 .notch {
-    height: 25px;
-    width: 25px;
+    height: 20px;
+    width: 20px;
     border-radius: 50%;
     background: yellow;
     position: absolute;
-    top: 2px;
-    left: 2px;
+    top: 1.5px;
+    left: 1.5px;
     box-shadow: 0 0 5px yellow;
     z-index: 1;
     transition: all 0.3s ease;
@@ -58,26 +59,26 @@ body.dark-mode {
 }
 .crater:first-child {
     left: 3px;
-    top: 4px;
-    height: 8px;
-    width: 12px;
+    top: 3px;
+    height: 6px;
+    width: 10px;
     border-radius: 50%;
     transform: rotate(-45deg);
 }
 
 .crater:nth-of-type(2) {
-    left: 10px;
+    left: 7px;
     top: 15px;
-    height: 6px;
-    width: 8px;
+    height: 4px;
+    width: 6px;
     border-radius: 50%;
 }
 
 .crater:last-child {
-    right: 3px;
-    top: 10px;
-    height: 5px;
-    width: 7px;
+    right: 1.5px;
+    top: 8px;
+    height: 4px;
+    width: 6px;
     border-radius: 50%;
     transform: rotate(45deg);
 }
@@ -85,7 +86,7 @@ body.dark-mode {
 .night > .notch {
     background: whitesmoke;
     box-shadow: 0 0 5px whitesmoke;
-    transform: translate(30px, 0);
+    transform: translate(22px, 0);
 }
 
 .shape {
@@ -96,25 +97,25 @@ body.dark-mode {
 }
 
 .shape.sm {
-    height: 5px;
-    width: 15px;
-    top: 20%;
+    height: 4px;
+    width: 13px;
+    top: 15%;
     left: 60%;
 }
 
 .shape.md {
-    height: 8px;
-    width: 20px;
-    top: 25%;
+    height: 6px;
+    width: 18px;
+    top: 27%;
     left: 25%;
     z-index: 2;
 }
 
 .shape.lg {
-    height: 7px;
-    width: 25px;
-    bottom: 4px;
-    left: 45%;
+    height: 6px;
+    width: 21px;
+    bottom: 2px;
+    left: 40%;
 }
 
 .night .shape {
@@ -125,21 +126,21 @@ body.dark-mode {
 .night .shape.sm {
     height: 2px;
     width: 2px;
-    transform: translate(-15px, 10px);
+    transform: translate(-12px, 14px);
 }
 
 .night .shape.sm:first-of-type {
-    transform: translate(-25px, -2px);
+    transform: translate(-18px, 1px);
 }
 
 .night .shape.md {
-    height: 4px;
-    width: 4px;
-    transform: translate(10px, 1px);
+    height: 3px;
+    width: 3px;
+    transform: translate(5px, 1px);
 }
 
 .night .shape.lg {
-    height: 10px;
-    width: 10px;
-    transform: translate(-20px, -2px);
+    height: 8px;
+    width: 8px;
+    transform: translate(-15px, -2px);
 }
