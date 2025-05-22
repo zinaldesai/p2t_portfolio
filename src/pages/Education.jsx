@@ -38,7 +38,7 @@ export default function ExperienceTimeline() {
             
             {/* Date */}
             <div className="relative w-full sm:w-40 flex sm:justify-end mb-2 sm:mb-0 pl-1 sm:pl-0">
-              <span className="date bg-midnight text-whitesmoke px-3 py-1 text-xs sm:text-sm rounded whitespace-nowrap font-decalotype tracking-wide">
+              <span className="date bg-midnight text-whitesmoke px-3 py-1 sm:text-sm rounded whitespace-nowrap font-decalotype tracking-wider">
                 {edu.date}
               </span>
             </div>

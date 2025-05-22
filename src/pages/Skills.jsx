@@ -44,7 +44,7 @@ const skills = {
 
 const SkillsSection = () => {
   return (
-    <div className="py-10 px-6 md:px-20 h-auto pb-10">
+    <div className="skills-container py-10 px-6 md:px-20 h-auto pb-10">
       <h1 className="title text-5xl font-bold mb-6 font-roca text-center mt-36">skills</h1>
       <p className="text-center text-3xl uppercase font-decalotype tracking-widest mb-10">
         Languages, Technologies, Tools & Platforms

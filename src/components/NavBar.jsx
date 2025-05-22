@@ -69,7 +69,10 @@ const NavBar = () => {
   return (
     <nav className="navigation px-4 py-2">
       <section>
-        <h1 className="text-3xl font-bold font-roca">portfolio</h1>
+      <NavLink to="/"
+        className={({ isActive }) => "logo-link" + (isActive ? " not-active" : "")}>
+        <h1 className="text-3xl font-bold font-roca cursor-pointer">portfolio</h1>
+      </NavLink>
       </section>
 
       <section className="lg-links flex">
