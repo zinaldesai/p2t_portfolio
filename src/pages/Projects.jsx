@@ -22,41 +22,12 @@ const myProjects = [
     description: 'Description of project 3',
     repositoryLink: 'Link to the GitHub repository',
   },
-  {
-    title: 'Project 4',
-    description: 'Description of project 4',
-    repositoryLink: 'Link to the GitHub repository',
-  },
-  {
-    title: 'Project 5',
-    description: 'Description of project 5',
-    repositoryLink: 'Link to the GitHub repository',
-  },
 ];
-// const Projects = () => {
-//   return (
-//     <main className="projects-container">
-//       <h1 className="title text-5xl font-bold mb-6 font-roca text-center mt-36">projects</h1>
-//       <div>
-//       {myProjects.map((project) => (
-//         <section key={project.title} className="project-item border border-2 rounded-lg">
-//           <section className="project-image-container">
-//             <FaGithub />
-//           </section>
-//           <h2 className="text-xl font-semibold">{project.title}</h2>
-//           <p className="text-lg">{project.description}</p>
-//           <p>Check out the link to the project repository <a href={project.repositoryLink} target="_blank">Here</a> </p>
-//         </section>
-//       ))}
-//       </div>
-//     </main>
-//   )
-// }
 
 const Projects = () => {
   return (
     <main className="projects-container py-16 px-4 md:px-12 lg:px-16 max-w-7xl mx-auto">
-      <h1 className="title text-5xl font-bold font-roca text-center mt-36">projects</h1>
+      <h1 className="title text-5xl font-bold font-roca text-center mt-32 mb-10">projects</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {myProjects.map((project) => (
           <section
@@ -88,4 +59,4 @@ const Projects = () => {
   );
 };
 
-export default Projects
+export default Projects;
