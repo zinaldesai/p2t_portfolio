@@ -1,6 +1,17 @@
 import React from "react";
 
 const education = [
+   {
+    date: "January 2026 - May 2027",
+    title: "Master's in Business Administration",
+    company: "Texas A&M - Corpus Christi",
+    details: "Concentration in Business Analytics"
+  }, 
+  {
+    date: "September 2025 - December 2025",
+    title: "RiseUp",
+    company: "ServiceNow",
+  },
   {
     date: "October 2024 - April 2025",
     title: "Path2Tech: Full Stack Developer Program",
@@ -15,6 +26,26 @@ const education = [
 ];
 
 const certifications = [
+    {
+    date: "2026",
+    title: "Certified System Administrator (CSA)",
+    company: "ServiceNow",
+  },
+  {
+    date: "2026",
+    title: "Certified Application Developer (CAD)",
+    company: "ServiceNow",
+  },
+  {
+    date: "2025",
+    title: "Flow Designer",
+    company: "ServiceNow",
+  },
+  {
+    date: "2025",
+    title: "Workflow Specialist",
+    company: "Asana",
+  },
   {
     date: "2025",
     title: "Responsive Web Design",
@@ -34,7 +65,7 @@ export default function ExperienceTimeline() {
 
       <div className="space-y-16 pb-20">
         {education.map((edu, index) => (
-          <div key={index} className="relative flex flex-col sm:flex-row items-start mb-16">
+          <div key={index} className="relative flex flex-col sm:flex-row items-start">
             
             {/* Date */}
             <div className="relative w-full sm:w-40 flex sm:justify-end mb-2 sm:mb-0 pl-1 sm:pl-0">

@@ -11,8 +11,8 @@ function TypewriterEffect() {
                         loop: true,
                         delay: 75,
                         strings: [
-                            "I\'m a Full Stack Developer",
-                            "I\'m a Software Engineer",
+                            "I\'m a Project Manager",
+                            "I\'m an Event Coordinator",
                         ]
                     }}>
                 </Typewriter>

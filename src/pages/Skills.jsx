@@ -13,7 +13,8 @@ import {
   SiExpress,
   SiNodedotjs,
   SiFlask,
-  SiVite
+  SiVite,
+  faJira
 } from "react-icons/si";
 
 const skills = {
@@ -39,6 +40,7 @@ const skills = {
     { name: "Visual Studio Code", icon: <FaCode size={60} color="#007acc" /> },
     { name: "Postman", icon: <SiPostman size={60} color="#ff6c37" /> },
     { name: "Vite", icon: <SiVite size={60} color="#646cff" /> },
+    { name: "Jira", icon: <faJira size={60} color="#47A248" /> },
   ],
 };
 
