@@ -3,52 +3,97 @@
   justify-content: space-between;
   align-items: center;
   min-height: 100px;
-  background-color: #744af6;
+  background-color: midnightblue;
   color: white;
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 98;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: 100px;
+
   .lg-links {
     display: none;
     font-size: 1.2rem;
+
     @media screen and (min-width: $laptop) {
       display: flex;
     }
+
     a {
-      margin-left: 20px;
+      margin: 0 10px;
+      position: relative;
+      text-decoration: none;
+      color: inherit;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -3px;
+        left: 0;
+        width: 50%;
+        height: 2px;
+        background-color: skyblue;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      &:hover {
+        color: skyblue;
+
+        &::after {
+          opacity: 1;
+          width: 50%;
+        }
+      }
+
+      &.active::after {
+        opacity: 1;
+        width: 100%;
+      }
     }
   }
+
   .sm-active {
     display: flex;
+
     @media screen and (min-width: $laptop) {
       display: none;
     }
   }
+
   .sm-links {
-    color: black;
+    position: absolute;
+    top: 100px; 
+    left: 0;
+    width: 100%;
+    background-color: midnightblue;
+    display: flex;
     flex-direction: column;
-    position: fixed;
-    background-color: white;
-    top: 0;
-    right: 0;
-    height: 100vh;
-    border-left: solid 1px black;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-    width: 200px;
-    padding: 20px 10px 0;
-    z-index: 99;
+    align-items: center;
+    z-index: 999;
+    padding-bottom: 25px;
+
     a {
-      margin: 3px 0;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
+      color: whitesmoke;
+      text-decoration: none;
     }
   }
-  a:hover {
-    color: blue;
-    text-decoration: underline;
+
+  .sm-links.active {
+    max-height: 200px; 
+    opacity: 1;
   }
+
+  a:hover {
+    color: skyblue;
+    text-decoration: none;
+  }
+
   button:hover {
-    background-color: gray;
-    color: white;
+    background-color: skyblue;
+    color: whitesmoke;
+    border: none;
   }
 }
