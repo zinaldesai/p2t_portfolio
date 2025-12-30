@@ -90,7 +90,7 @@ const SkillsSection = () => {
           </h2>
           <div className="h-px w-24 bg-slate-300 mb-8"></div>
 
-          <ol className="space-y-3 text-lg leading-relaxed list-decimal list-inside">
+          <ol className="grid md:grid-cols-2 gap-x-16 gap-y-4 text-lg leading-relaxed">
             <li>Define scope, objectives, constraints, and success metrics</li>
             <li>Align stakeholders, teams, and vendors</li>
             <li>Plan milestones, sprints, and dependencies</li>
