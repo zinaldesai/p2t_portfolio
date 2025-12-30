@@ -2,10 +2,10 @@ import React from "react";
 
 const SkillsSection = () => {
   return (
-    <div className="skills-container py-10 px-6 md:px-20 h-auto pb-10">
+    <div className="skills-container py-10 px-6 md:px-20 h-auto pb-20">
       
       {/* Page Header */}
-      <header className="max-w-4xl text-center mb-24">
+      <header className="max-w-4xl mx-auto text-center mb-24">
         <h1 className="title text-5xl font-bold mb-10 font-roca text-center mt-36">Project Management</h1>
         <p className="text-lg md:text-xl font-decalotype leading-relaxed text-slate-600">
           I manage projects by aligning people, processes, and tools to deliver
@@ -13,13 +13,13 @@ const SkillsSection = () => {
         </p>
 
         {/* Summary */}
-        <p className="mt-10 text-sm uppercase tracking-widest text-slate-500">
+        <p className="mt-6 text-sm uppercase tracking-widest text-slate-500">
           Agile • Scrum • SDLC • Jira • Asana • Stakeholder Management • Risk Mitigation
         </p>
       </header>
 
       {/* Skills Container */}
-      <section className="w-full max-w-5xl space-y-24 font-decalotype">
+      <section className="w-full max-w-5xl mx-auto space-y-10 font-decalotype">
 
         {/* Sections */}
         <div>
