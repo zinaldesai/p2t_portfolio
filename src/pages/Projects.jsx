@@ -27,7 +27,7 @@ const myProjects = [
 const Projects = () => {
   return (
     <main className="projects-container py-16 px-4 md:px-12 lg:px-16 max-w-7xl mx-auto">
-      <h1 className="title text-5xl font-bold font-roca text-center mt-32 mb-10">projects</h1>
+      <h1 className="title text-5xl font-bold font-roca text-center mt-32 mb-10">Projects</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {myProjects.map((project) => (
           <section

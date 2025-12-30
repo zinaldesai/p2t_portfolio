@@ -11,7 +11,7 @@ const freeTime = 'When I\'m not working, you\'ll usually find me baking or cooki
 const About = () => {
   return (
     <main className="about-container min-h-screen md:px-12 lg:px-16 mx-auto">
-      <h1 className="title text-4xl font-bold mb-12 font-roca text-center mt-36">about</h1>
+      <h1 className="title text-4xl font-bold mb-12 font-roca text-center mt-36">About</h1>
       <br />
       <section className='about-content-container'>
         <section className='image-container'>

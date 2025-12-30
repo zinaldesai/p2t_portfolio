@@ -51,17 +51,12 @@ const certifications = [
     title: "Responsive Web Design",
     company: "freeCodeCamp",
   },
-  {
-    date: "2024",
-    title: "AI for All: From Basics to GenAI Practice",
-    company: "NVIDIA",
-  },
 ]
 
 export default function ExperienceTimeline() {
   return (
     <div className="education-container h-auto px-4 md:px-12 lg:px-16 py-10 max-w-5xl mx-auto pb-16">
-      <h1 className="page-title text-5xl font-bold mb-12 font-roca text-center mt-36">education</h1>
+      <h1 className="page-title text-5xl font-bold mb-12 font-roca text-center mt-36">Education</h1>
 
       <div className="space-y-16 pb-20">
         {education.map((edu, index) => (

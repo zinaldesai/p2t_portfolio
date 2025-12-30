@@ -1,7 +1,7 @@
-# Portfolio Template
-[Description](#description) | [Prerequisites](#prerequisites) | [Demo](#demo) | [Important Git/Github Expectations](#important-gitgithub-expectations) | [Getting Started](#getting-started) | [Next Steps](#next-steps) | [Contributors](#contributors) | [Deployment](#deployment) | [Live Application](#live-application)
+# Portfolio
+[Description](#description) | [Getting Started](#getting-started) | [Deployment](#deployment) | [Live Application](#live-application)
 ## Description
-This is a template portfolio that was built with React. You can use this project to help you build out your porfolio. This project provides the foundation for a portfolio and has minimal styling in place. There are currently four routes in this project: a `home page`, `projects page`, `contact page`, and `about me page`. The technologies used on this project include:
+This is a portfolio that was built with React. You can use this project to help you build out your porfolio. This project provides the foundation for a portfolio and has minimal styling in place. There are currently four routes in this project: a `home page`, `projects page`, `contact page`, and `about me page`. The technologies used on this project include:
 
 - Vite
 - React
@@ -23,13 +23,6 @@ This is a template portfolio that was built with React. You can use this project
 Below is a demo of what the project will look like when you first run the project. This is a thumbnail so you will need to click on it to view the video in Vimeo.
 
 [![Watch the video](readme_files/Portfolio_Demo_Thumbnail.png)](https://vimeo.com/980251710)
-
-## Important Git/GitHub Expectations:
-- The original GitHub repository is not allowed to have edits from anyone who is not a contributor. All the contributors will be listed in the [Contributors](#contributors) section of the README
-- Pushing to main on the original GitHub repository is not allowed
-- Creating a new branch or Pull Request on the original GitHub repository is not allowed
-- If you want to use this repository you must first FORK the repository, do not clone or pull from the original GitHub URL.
-- Here is a link to the original GitHub repository [Repository Link](https://github.com/javiguerra777/my_portfolio_template)
 
 ## Getting Started
 1. **Checking for node and npm**
@@ -65,30 +58,6 @@ npm install
 ```shell
 npm run dev
 ```
-
-## Next Steps
-To begin converting this template into your own portfolio here are some recommended steps to help you get started:
-
-- Convert the hero image on the landing page to your own custom hero image, located in `src/pages/Home.jsx`
-- Upload your current resume to this project and link it so that users can download and view your resume, located in `src/components/DownloadResume.jsx`
-- Add your own projects, so they can be rendered in the projects page, located in `src/pages/Projects.jsx`
-- Adjust the contact form so that users can send you an ameil if they want to contact you, located in `src/pages/Contact.jsx`
-- Convert the placeholder image in the about me page to your own professional headshot, located in `src/pages/About.jsx`
-
-This project uses SASS and Tailwind to style this project, SASS is very similar to CSS the only big difference is you can import other SASS files, you can create reusable variables for styling, and you can nest styles in SASS. Tailwind is just a CSS library for styling below are some articles for you to read to better improve your understanding of SASS and Tailwind:
-
-- Link for: [SASS for Beginners](https://www.freecodecamp.org/news/the-beginners-guide-to-sass/)
-- Link for: [Tailwind for Beginners](https://www.freecodecamp.org/news/learn-tailwind-css/)
-
-To begin styling this project look under `src/styles` there are a few SASS files you can begin working in and editing to adjust your styling. You are free to adjust the styles to your liking.
-
-There are a lot more steps to accomplish to fully turn this template into your own portfolio, but these were a few steps to help you get started.
-
-## Contributors
-- @javiguerra777
-- @srirachy
-- @kurogisa
-
 ## Deployment
 Use netlify to deploy your application, follow the steps below to deploy this project to Netlify:
 
