@@ -26,6 +26,7 @@ const Home = () => {
         <IoIosMail size={35} />
         </a>
         </div>
+        <p className="mt-6">Thanks for stopping by — enjoy exploring!</p>
       </section>
       <footer className="text-center">
       <p className="tracking-wide italic font-decalotype">{personalQuote}</p>
