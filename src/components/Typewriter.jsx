@@ -12,7 +12,7 @@ function TypewriterEffect() {
                         delay: 75,
                         strings: [
                             "I\'m a Project Manager",
-                            "I\'m an Event Coordinator",
+                            // "I\'m an Event Coordinator",
                         ]
                     }}>
                 </Typewriter>

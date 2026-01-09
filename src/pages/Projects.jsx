@@ -8,26 +8,27 @@ import { FaGithub } from "react-icons/fa6";
 // You can also add more properties if you want to display more information about your projects.
 const myProjects = [
   {
-    title: 'Project 1',
+    title: 'Knot So Serious',
     description: 'Description of project 1',
-    repositoryLink: 'Link to the GitHub repository',
+    repositoryLink: 'https://github.com/AayeshaIslam/knot_so_serious',
   },
-  {
-    title: 'Project 2',
-    description: 'Description of project 2',
-    repositoryLink: 'Link to the GitHub repository',
-  },
-  {
-    title: 'Project 3',
-    description: 'Description of project 3',
-    repositoryLink: 'Link to the GitHub repository',
-  },
+  // {
+  //   title: 'Project 2',
+  //   description: 'Description of project 2',
+  //   repositoryLink: 'Link to the GitHub repository',
+  // },
+  // {
+  //   title: 'Project 3',
+  //   description: 'Description of project 3',
+  //   repositoryLink: 'Link to the GitHub repository',
+  // },
 ];
 
 const Projects = () => {
   return (
     <main className="projects-container py-16 px-4 md:px-12 lg:px-16 max-w-7xl mx-auto">
-      <h1 className="title text-5xl font-bold font-roca text-center mt-32 mb-10">Projects</h1>
+      <h1 className="title text-5xl font-bold font-roca text-center mt-32 mb-5">Projects</h1>
+      <h2 className="text-xl mb-10 text-center"> Selected project work showcasing my approach to planning, coordination, and delivery.</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {myProjects.map((project) => (
           <section

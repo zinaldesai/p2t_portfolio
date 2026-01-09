@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom"
 import { GiHamburgerMenu } from "react-icons/gi";
 import { motion, AnimatePresence } from "framer-motion";
 import Toggle from '../Toggle'
+import Icon from '../assets/zd.png'
 
 const sidebarVariants = {
   open: (customHeight) => ({
@@ -84,7 +85,7 @@ const NavBar = () => {
         <NavLink to="/experience" className={({ isActive }) => isActive ? "active" : ""}>Experience</NavLink>
         <NavLink to="/projects" className={({ isActive }) => isActive ? "active" : ""}>Projects</NavLink>
         <a onClick={() => openInNewTab("https://drive.google.com/file/d/1xJbom8gRsKgCb-3SwmjAEwX4smHXuByK/view?usp=drive_link")} download="Z.Desai-Resume.pdf">Resume</a>
-        <div className="theme-toggle">
+        <div className="theme-toggle ml-2">
           <Toggle toggled={toggled} onClick={handleClick}/>
         </div>
       </section>
