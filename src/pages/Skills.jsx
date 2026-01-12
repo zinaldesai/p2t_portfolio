@@ -5,7 +5,7 @@ const SkillsSection = () => {
     <div className="skills-container py-10 px-6 md:px-20 h-auto pb-20">
       
       {/* Page Header */}
-      <header className="max-w-4xl mx-auto text-center mb-24">
+      <header className="max-w-4xl mx-auto text-center mb-20">
         <h1 className="title text-5xl font-bold mb-10 font-roca text-center mt-36">Project Management</h1>
         <p className="text-lg md:text-xl font-decalotype leading-relaxed text-slate-600">
           I manage projects by aligning people, processes, and tools to deliver
@@ -26,7 +26,7 @@ const SkillsSection = () => {
           <h2 className="text-2xl font-semibold tracking-widest uppercase mb-4">
             Project Management & Delivery
           </h2>
-          <div className="h-px w-24 bg-slate-300 mb-8"></div>
+          <div className="h-px w-24 bg-slate-300 mb-6"></div>
 
           <ul className="grid md:grid-cols-2 gap-x-16 gap-y-4 text-lg leading-relaxed">
             <li>Agile & Scrum methodologies (Sprint Planning, Retrospectives)</li>
