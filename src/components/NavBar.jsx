@@ -84,7 +84,7 @@ const NavBar = () => {
         <NavLink to="/education" className={({ isActive }) => isActive ? "active" : ""}>Education</NavLink>
         <NavLink to="/experience" className={({ isActive }) => isActive ? "active" : ""}>Experience</NavLink>
         {/* <NavLink to="/projects" className={({ isActive }) => isActive ? "active" : ""}>Projects</NavLink> */}
-        <a onClick={() => openInNewTab("https://drive.google.com/file/d/1xJbom8gRsKgCb-3SwmjAEwX4smHXuByK/view?usp=drive_link")} download="Z.Desai-Resume.pdf">Resume</a>
+        <a onClick={() => openInNewTab("https://drive.google.com/file/d/1NmYyejrmvgePid7KZrOrtjqxtdVTkSHO/view?usp=drive_link")} download="Z.Desai-Resume.pdf">Resume</a>
         <div className="theme-toggle ml-2">
           <Toggle toggled={toggled} onClick={handleClick}/>
         </div>
@@ -116,7 +116,7 @@ const NavBar = () => {
               <NavLink to="/education" onClick={handleLinkClick}>Education</NavLink>
               <NavLink to="/experience" onClick={handleLinkClick}>Experience</NavLink>
               {/* <NavLink to="/projects" onClick={handleLinkClick}>Projects</NavLink>      */}
-              <a onClick={() => openInNewTab("https://drive.google.com/file/d/1xJbom8gRsKgCb-3SwmjAEwX4smHXuByK/view?usp=drive_link")} download="Z.Desai-Resume.pdf">Resume</a>
+              <a onClick={() => openInNewTab("https://drive.google.com/file/d/1NmYyejrmvgePid7KZrOrtjqxtdVTkSHO/view?usp=drive_link")} download="Z.Desai-Resume.pdf">Resume</a>
               <div className="theme-toggle">
                 <Toggle toggled={toggled} onClick={handleClick}/>
               </div>
