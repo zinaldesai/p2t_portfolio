@@ -1,0 +1,3052 @@
+diff --git a/.eslintrc.cjs b/.eslintrc.cjs
+index 3e212e1..5a3125b 100644
+--- a/.eslintrc.cjs
++++ b/.eslintrc.cjs
+@@ -12,6 +12,7 @@ module.exports = {
+   settings: { react: { version: '18.2' } },
+   plugins: ['react-refresh'],
+   rules: {
++    'react/prop-types': 'off',
+     'react/jsx-no-target-blank': 'off',
+     'react-refresh/only-export-components': [
+       'warn',
+diff --git a/src/App.jsx b/src/App.jsx
+index b5c1f58..b853338 100644
+--- a/src/App.jsx
++++ b/src/App.jsx
+@@ -1,8 +1,10 @@
+ import { useEffect } from "react"
+ import { Routes, Route, useLocation } from "react-router-dom"
++import { AnimatePresence } from "framer-motion"
+ import NavBar from "./components/NavBar"
++import PageWrapper from "./components/PageWrapper"
++import AiChatWidget from "./components/AiChatWidget"
+ import Home from "./pages/Home"
+-import Projects from "./pages/Projects"
+ import Experience from "./pages/Experience"
+ import About from "./pages/About"
+ import NotFound from "./pages/NotFound"
+@@ -10,27 +12,71 @@ import Education from "./pages/Education"
+ import Skills from "./pages/Skills"
+ 
+ function App() {
+-  const { pathname } = useLocation()
++  const location = useLocation()
++
+   useEffect(() => {
+-    const navigationContainer = document.getElementById("navigation-container");
++    const navigationContainer = document.getElementById("navigation-container")
+     if (navigationContainer) {
+-      navigationContainer.scrollTop = 0;
++      navigationContainer.scrollTop = 0
+     }
+-  }, [pathname]);
++  }, [location.pathname])
+ 
+   return (
+     <section className="content-container" id="navigation-container">
+       <NavBar />
+-      <Routes>
+-        <Route path="/" element={<Home />} />
+-        <Route path="/about" element={<About />} />
+-        <Route path="/skills" element={<Skills />} />
+-        <Route path="/education" element={<Education />} />
+-        <Route path="/experience" element={<Experience />} />
+-        {/* <Route path="/projects" element={<Projects />} /> */}
+-        
+-        <Route path="*" element={<NotFound />} />
+-      </Routes>
++      <AnimatePresence mode="wait">
++        <Routes location={location} key={location.pathname}>
++          <Route
++            path="/"
++            element={
++              <PageWrapper fullBleed>
++                <Home />
++              </PageWrapper>
++            }
++          />
++          <Route
++            path="/about"
++            element={
++              <PageWrapper>
++                <About />
++              </PageWrapper>
++            }
++          />
++          <Route
++            path="/skills"
++            element={
++              <PageWrapper>
++                <Skills />
++              </PageWrapper>
++            }
++          />
++          <Route
++            path="/education"
++            element={
++              <PageWrapper>
++                <Education />
++              </PageWrapper>
++            }
++          />
++          <Route
++            path="/experience"
++            element={
++              <PageWrapper>
++                <Experience />
++              </PageWrapper>
++            }
++          />
++          <Route
++            path="*"
++            element={
++              <PageWrapper className="flex min-h-[70vh] flex-col justify-center">
++                <NotFound />
++              </PageWrapper>
++            }
++          />
++        </Routes>
++      </AnimatePresence>
++      <AiChatWidget />
+     </section>
+   )
+ }
+diff --git a/src/Toggle/index.jsx b/src/Toggle/index.jsx
+index 73a0d9d..eedc82b 100644
+--- a/src/Toggle/index.jsx
++++ b/src/Toggle/index.jsx
+@@ -1,20 +1,26 @@
+-import React from 'react';
+-import './style.css';
++import "./style.css"
+ 
+-export default function Toggle( {toggled, onClick} ) {
+-    return (
+-        <div onClick={onClick} className={`toggle${toggled ? " night" : ""}`}>
+-            <div className="notch">
+-                <div className="crater" />
+-                <div className="crater" />
+-                <div className="crater" />
+-            </div>
+-            <div>
+-                <div className="shape sm" />
+-                <div className="shape sm" />
+-                <div className="shape md" />
+-                <div className="shape lg" />
+-            </div>
+-        </div>
+-    )
+-}
+\ No newline at end of file
++export default function Toggle({ toggled, onClick, ariaLabel = "Toggle color theme" }) {
++  return (
++    <button
++      type="button"
++      className={`toggle${toggled ? " night" : ""}`}
++      onClick={onClick}
++      role="switch"
++      aria-checked={toggled}
++      aria-label={ariaLabel}
++    >
++      <span className="notch">
++        <span className="crater" />
++        <span className="crater" />
++        <span className="crater" />
++      </span>
++      <span className="block">
++        <span className="shape sm" />
++        <span className="shape sm" />
++        <span className="shape md" />
++        <span className="shape lg" />
++      </span>
++    </button>
++  )
++}
+diff --git a/src/Toggle/style.css b/src/Toggle/style.css
+index d9d98cc..26c3630 100644
+--- a/src/Toggle/style.css
++++ b/src/Toggle/style.css
+@@ -1,146 +1,144 @@
+-body {
+-    background-color: whitesmoke;
+-    color: rgb(32, 32, 32);
+-    transition: background-color 0.4s ease, color 0.4s ease;
++.theme-toggle {
++  height: 26px;
++  width: 48px;
++  display: flex;
++  align-items: center;
++  justify-content: center;
++  margin-top: 2px;
+ }
+ 
+-body.dark-mode {
+-    background-color: rgb(32, 32, 32);
+-    color: whitesmoke;
++.theme-toggle .toggle {
++  appearance: none;
++  border: none;
++  padding: 0;
++  font: inherit;
++  height: 100%;
++  width: 100%;
++  border-radius: 50px;
++  background-image: var(--color-accent-gradient);
++  transition:
++    background-image 0.3s ease,
++    box-shadow 0.3s ease;
++  position: relative;
++  margin: auto;
++  cursor: pointer;
++  box-shadow: 0 0 0 1px var(--color-border);
+ }
+ 
+-.theme-toggle {
+-    height: 23px;
+-    width: 45px;
+-    display: flex;
+-    align-items: center;
+-    justify-content: center;
+-    margin-top: 2px;
+-  }
+-  
+-.theme-toggle .toggle {
+-    height: 100%;
+-    width: 100%;
+-    border-radius: 50px;
+-    background-image: linear-gradient(aqua, skyblue);
+-    transition: background-image 0.3s ease;
+-    position: relative;
+-    margin: auto;
+-    cursor: pointer;
+-}
+-  
+ .theme-toggle .toggle.night {
+-    background-image: linear-gradient(midnightblue, rebeccapurple);
++  background-image: linear-gradient(135deg, #4f46e5 0%, #312e81 100%);
++  box-shadow: 0 0 12px var(--color-accent-glow);
+ }
+ 
+ .notch {
+-    height: 20px;
+-    width: 20px;
+-    border-radius: 50%;
+-    background: yellow;
+-    position: absolute;
+-    top: 1.5px;
+-    left: 1.5px;
+-    box-shadow: 0 0 5px yellow;
+-    z-index: 1;
+-    transition: all 0.3s ease;
++  height: 20px;
++  width: 20px;
++  border-radius: 50%;
++  background: #fef08a;
++  position: absolute;
++  top: 3px;
++  left: 3px;
++  box-shadow: 0 0 6px rgba(254, 240, 138, 0.6);
++  z-index: 1;
++  transition: all 0.3s ease;
+ }
+ 
+ .notch > .crater {
+-    background: rgb(249, 249, 249);
+-    border-radius: 50%;
+-    position: absolute;
+-    opacity: 0;
+-    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.4) inset;
++  background: var(--color-bg-secondary);
++  border-radius: 50%;
++  position: absolute;
++  opacity: 0;
++  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.35) inset;
+ }
+ 
+ .night .crater {
+-    opacity: 0.4;
++  opacity: 0.45;
+ }
++
+ .crater:first-child {
+-    left: 3px;
+-    top: 3px;
+-    height: 6px;
+-    width: 10px;
+-    border-radius: 50%;
+-    transform: rotate(-45deg);
++  left: 3px;
++  top: 3px;
++  height: 6px;
++  width: 10px;
++  border-radius: 50%;
++  transform: rotate(-45deg);
+ }
+ 
+ .crater:nth-of-type(2) {
+-    left: 7px;
+-    top: 15px;
+-    height: 4px;
+-    width: 6px;
+-    border-radius: 50%;
++  left: 7px;
++  top: 15px;
++  height: 4px;
++  width: 6px;
++  border-radius: 50%;
+ }
+ 
+ .crater:last-child {
+-    right: 1.5px;
+-    top: 8px;
+-    height: 4px;
+-    width: 6px;
+-    border-radius: 50%;
+-    transform: rotate(45deg);
++  right: 1.5px;
++  top: 8px;
++  height: 4px;
++  width: 6px;
++  border-radius: 50%;
++  transform: rotate(45deg);
+ }
+ 
+ .night > .notch {
+-    background: whitesmoke;
+-    box-shadow: 0 0 5px whitesmoke;
+-    transform: translate(22px, 0);
++  background: var(--color-text-primary);
++  box-shadow: 0 0 8px var(--color-text-muted);
++  transform: translate(22px, 0);
+ }
+ 
+ .shape {
+-    position: absolute;
+-    background: whitesmoke;
+-    border-radius: 50%;
+-    transition: all 0.3s ease;
++  position: absolute;
++  background: var(--color-bg-primary);
++  border-radius: 50%;
++  transition: all 0.3s ease;
+ }
+ 
+ .shape.sm {
+-    height: 4px;
+-    width: 13px;
+-    top: 15%;
+-    left: 60%;
++  height: 4px;
++  width: 13px;
++  top: 15%;
++  left: 60%;
+ }
+ 
+ .shape.md {
+-    height: 6px;
+-    width: 18px;
+-    top: 27%;
+-    left: 25%;
+-    z-index: 2;
++  height: 6px;
++  width: 18px;
++  top: 27%;
++  left: 25%;
++  z-index: 2;
+ }
+ 
+ .shape.lg {
+-    height: 6px;
+-    width: 21px;
+-    bottom: 2px;
+-    left: 40%;
++  height: 6px;
++  width: 21px;
++  bottom: 2px;
++  left: 40%;
+ }
+ 
+ .night .shape {
+-    box-shadow: 0 0 10px 2px violet;
+-    background: lightgray;
++  box-shadow: 0 0 10px 2px rgba(129, 140, 248, 0.45);
++  background: var(--color-text-secondary);
+ }
+ 
+ .night .shape.sm {
+-    height: 2px;
+-    width: 2px;
+-    transform: translate(-12px, 14px);
++  height: 2px;
++  width: 2px;
++  transform: translate(-12px, 14px);
+ }
+ 
+ .night .shape.sm:first-of-type {
+-    transform: translate(-18px, 1px);
++  transform: translate(-18px, 1px);
+ }
+ 
+ .night .shape.md {
+-    height: 3px;
+-    width: 3px;
+-    transform: translate(5px, 1px);
++  height: 3px;
++  width: 3px;
++  transform: translate(5px, 1px);
+ }
+ 
+ .night .shape.lg {
+-    height: 8px;
+-    width: 8px;
+-    transform: translate(-15px, -2px);
+-}
+\ No newline at end of file
++  height: 8px;
++  width: 8px;
++  transform: translate(-15px, -2px);
++}
+diff --git a/src/components/AiChatWidget.jsx b/src/components/AiChatWidget.jsx
+new file mode 100644
+index 0000000..8388540
+--- /dev/null
++++ b/src/components/AiChatWidget.jsx
+@@ -0,0 +1,212 @@
++import { useState, useRef, useEffect, useCallback } from "react"
++import { motion, AnimatePresence } from "framer-motion"
++import { HiSparkles } from "react-icons/hi2"
++import { IoClose, IoSend } from "react-icons/io5"
++import { getResponse } from "../data/knowledgeBase"
++
++const STARTERS = [
++  "What does Zinal do?",
++  "What tools does she use?",
++  "Tell me about her experience",
++  "How can I contact her?",
++]
++
++const TYPING_DELAY = 600
++
++function TypingIndicator() {
++  return (
++    <div className="flex items-center gap-1.5 px-4 py-3">
++      {[0, 1, 2].map((i) => (
++        <span
++          key={i}
++          className="block h-2 w-2 rounded-full bg-accent/60 animate-bounce-dot"
++          style={{ animationDelay: `${i * 0.16}s` }}
++        />
++      ))}
++    </div>
++  )
++}
++
++export default function AiChatWidget() {
++  const [isOpen, setIsOpen] = useState(false)
++  const [messages, setMessages] = useState([
++    {
++      role: "bot",
++      text: "Hey! I'm Zinal's AI assistant. Ask me anything about her experience, skills, or education.",
++    },
++  ])
++  const [input, setInput] = useState("")
++  const [isTyping, setIsTyping] = useState(false)
++  const scrollRef = useRef(null)
++  const inputRef = useRef(null)
++
++  const scrollToBottom = useCallback(() => {
++    if (scrollRef.current) {
++      scrollRef.current.scrollTop = scrollRef.current.scrollHeight
++    }
++  }, [])
++
++  useEffect(() => {
++    scrollToBottom()
++  }, [messages, isTyping, scrollToBottom])
++
++  useEffect(() => {
++    if (isOpen && inputRef.current) {
++      inputRef.current.focus()
++    }
++  }, [isOpen])
++
++  useEffect(() => {
++    const onKey = (e) => {
++      if (e.key === "Escape" && isOpen) setIsOpen(false)
++    }
++    window.addEventListener("keydown", onKey)
++    return () => window.removeEventListener("keydown", onKey)
++  }, [isOpen])
++
++  const sendMessage = (text) => {
++    const trimmed = (text || input).trim()
++    if (!trimmed) return
++
++    setMessages((prev) => [...prev, { role: "user", text: trimmed }])
++    setInput("")
++    setIsTyping(true)
++
++    setTimeout(() => {
++      const response = getResponse(trimmed)
++      setMessages((prev) => [...prev, { role: "bot", text: response }])
++      setIsTyping(false)
++    }, TYPING_DELAY)
++  }
++
++  const handleKeyDown = (e) => {
++    if (e.key === "Enter" && !e.shiftKey) {
++      e.preventDefault()
++      sendMessage()
++    }
++  }
++
++  return (
++    <>
++      {/* Floating action button */}
++      <button
++        type="button"
++        onClick={() => setIsOpen((s) => !s)}
++        className="fixed bottom-6 right-6 z-[1100] flex h-14 w-14 items-center justify-center rounded-full border border-border bg-bg-card/90 text-accent shadow-card backdrop-blur-xl transition-all duration-300 hover:scale-110 hover:shadow-glow animate-fab-pulse sm:bottom-8 sm:right-8"
++        aria-label={isOpen ? "Close AI assistant" : "Open AI assistant"}
++        aria-expanded={isOpen}
++      >
++        {isOpen ? (
++          <IoClose size={24} />
++        ) : (
++          <HiSparkles size={24} />
++        )}
++      </button>
++
++      {/* Chat panel */}
++      <AnimatePresence>
++        {isOpen && (
++          <motion.div
++            initial={{ opacity: 0, y: 20, scale: 0.95 }}
++            animate={{ opacity: 1, y: 0, scale: 1 }}
++            exit={{ opacity: 0, y: 20, scale: 0.95 }}
++            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
++            className="fixed bottom-24 right-4 z-[1100] flex w-[calc(100vw-2rem)] max-w-[380px] flex-col overflow-hidden rounded-2xl border border-border bg-bg-secondary/95 shadow-card backdrop-blur-xl sm:bottom-28 sm:right-8"
++            style={{ height: "min(520px, calc(100vh - 10rem))" }}
++            role="dialog"
++            aria-label="AI Chat Assistant"
++          >
++            {/* Header */}
++            <div className="flex items-center gap-3 border-b border-border bg-bg-card/60 px-4 py-3">
++              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-accent text-white">
++                <HiSparkles size={16} />
++              </span>
++              <div className="flex-1">
++                <p className="text-sm font-semibold text-text-primary">
++                  Ask about Zinal
++                </p>
++                <p className="text-xs text-text-muted">AI-powered assistant</p>
++              </div>
++              <button
++                type="button"
++                onClick={() => setIsOpen(false)}
++                className="rounded-lg p-1.5 text-text-muted transition-colors hover:bg-bg-card hover:text-text-primary"
++                aria-label="Close chat"
++              >
++                <IoClose size={18} />
++              </button>
++            </div>
++
++            {/* Messages */}
++            <div
++              ref={scrollRef}
++              className="flex-1 space-y-3 overflow-y-auto overscroll-contain px-4 py-4"
++            >
++              {messages.map((msg, i) => (
++                <div
++                  key={i}
++                  className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
++                >
++                  <div
++                    className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
++                      msg.role === "user"
++                        ? "bg-gradient-accent text-white"
++                        : "border border-border bg-bg-card/80 text-text-primary"
++                    }`}
++                  >
++                    {msg.text}
++                  </div>
++                </div>
++              ))}
++              {isTyping && (
++                <div className="flex justify-start">
++                  <div className="rounded-2xl border border-border bg-bg-card/80">
++                    <TypingIndicator />
++                  </div>
++                </div>
++              )}
++            </div>
++
++            {/* Starter chips */}
++            {messages.length <= 1 && (
++              <div className="flex flex-wrap gap-2 border-t border-border/50 px-4 py-3">
++                {STARTERS.map((q) => (
++                  <button
++                    key={q}
++                    type="button"
++                    onClick={() => sendMessage(q)}
++                    className="rounded-full border border-border bg-bg-card/60 px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:border-accent/40 hover:text-accent"
++                  >
++                    {q}
++                  </button>
++                ))}
++              </div>
++            )}
++
++            {/* Input */}
++            <div className="flex items-center gap-2 border-t border-border bg-bg-card/40 px-3 py-3">
++              <input
++                ref={inputRef}
++                type="text"
++                value={input}
++                onChange={(e) => setInput(e.target.value)}
++                onKeyDown={handleKeyDown}
++                placeholder="Ask something..."
++                className="flex-1 rounded-xl border border-border bg-bg-primary/60 px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:border-accent/50 focus:outline-none"
++              />
++              <button
++                type="button"
++                onClick={() => sendMessage()}
++                disabled={!input.trim()}
++                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-accent text-white transition-all duration-200 hover:opacity-90 disabled:opacity-40"
++                aria-label="Send message"
++              >
++                <IoSend size={16} />
++              </button>
++            </div>
++          </motion.div>
++        )}
++      </AnimatePresence>
++    </>
++  )
++}
+diff --git a/src/components/GridBackground.jsx b/src/components/GridBackground.jsx
+new file mode 100644
+index 0000000..fa68e4c
+--- /dev/null
++++ b/src/components/GridBackground.jsx
+@@ -0,0 +1,8 @@
++export default function GridBackground() {
++  return (
++    <div
++      className="dot-grid pointer-events-none fixed inset-0 z-0 animate-dot-drift"
++      aria-hidden="true"
++    />
++  )
++}
+diff --git a/src/components/NavBar.jsx b/src/components/NavBar.jsx
+index 435493a..b127d2a 100644
+--- a/src/components/NavBar.jsx
++++ b/src/components/NavBar.jsx
+@@ -1,132 +1,198 @@
+-import { useRef, useState, useEffect } from "react"
++import { useRef, useState, useEffect, useLayoutEffect } from "react"
+ import { NavLink } from "react-router-dom"
+-import { GiHamburgerMenu } from "react-icons/gi";
+-import { motion, AnimatePresence } from "framer-motion";
+-import Toggle from '../Toggle'
+-import Icon from '../assets/zd.png'
++import { GiHamburgerMenu } from "react-icons/gi"
++import { IoClose } from "react-icons/io5"
++import { motion, AnimatePresence } from "framer-motion"
++import Toggle from "../Toggle"
+ 
+ const sidebarVariants = {
+-  open: (customHeight) => ({
+-    height: customHeight,
++  open: (h) => ({
++    height: h,
+     opacity: 1,
+-    transition: {
+-      duration: 0.3,
+-      ease: "easeInOut",
+-    },
++    transition: { duration: 0.28, ease: [0.22, 1, 0.36, 1] },
+   }),
+   closed: {
+     height: 0,
+     opacity: 0,
+-    transition: {
+-      duration: 0.3,
+-      ease: "easeInOut",
+-    },
++    transition: { duration: 0.22, ease: [0.22, 1, 0.36, 1] },
+   },
+-};
++}
++
++const navLinks = [
++  { to: "/", label: "Home", end: true },
++  { to: "/about", label: "About" },
++  { to: "/skills", label: "Skills" },
++  { to: "/education", label: "Education" },
++  { to: "/experience", label: "Experience" },
++]
++
++const RESUME_URL =
++  "https://drive.google.com/file/d/1xJbom8gRsKgCb-3SwmjAEwX4smHXuByK/view?usp=drive_link"
+ 
+-const NavBar = () => {
+-  const [open, setOpen] = useState(false);
+-  const [toggled, setToggled] = useState(false);
++export default function NavBar() {
++  const [open, setOpen] = useState(false)
++  const [toggled, setToggled] = useState(() => {
++    if (typeof window === "undefined") return false
++    return localStorage.getItem("theme") === "dark"
++  })
+ 
+-  const menuRef = useRef(null);
+-  const [menuHeight, setMenuHeight] = useState(0);
++  const menuRef = useRef(null)
++  const [menuHeight, setMenuHeight] = useState(0)
+ 
+   useEffect(() => {
+     if (menuRef.current) {
+-      setTimeout(() => {
+-        setMenuHeight(menuRef.current.scrollHeight);
+-      }, 0);
++      const id = requestAnimationFrame(() => {
++        setMenuHeight(menuRef.current.scrollHeight)
++      })
++      return () => cancelAnimationFrame(id)
+     }
+-  }, [open]);
++  }, [open])
+ 
+-  const handleLinkClick = () => {
+-    setOpen(false);
+-  }
++  useLayoutEffect(() => {
++    document.body.classList.toggle("dark-mode", toggled)
++    localStorage.setItem("theme", toggled ? "dark" : "light")
++  }, [toggled])
+ 
+-  const handleClick = () => {
+-    setToggled((s) => !s);
+-  };
++  const handleLinkClick = () => setOpen(false)
+ 
+   const openInNewTab = (url) => {
+-    window.open(url, "_blank", "noreferrer");
+-  };
+-
+-  useEffect(() => {
+-    const mode = toggled ? "dark" : "light";
+-    document.body.classList.toggle("dark-mode", toggled);
+-    localStorage.setItem("theme", mode);
+-  }, [toggled]); 
++    window.open(url, "_blank", "noreferrer")
++  }
+ 
+   useEffect(() => {
+     const handleResize = () => {
+-      if (window.innerWidth > 768) {
+-        setOpen(false);
+-      }
+-    };
+-
+-    window.addEventListener("resize", handleResize);
+-    return () => window.removeEventListener("resize", handleResize);
+-  }, []);
++      if (window.innerWidth > 1024) setOpen(false)
++    }
++    window.addEventListener("resize", handleResize)
++    return () => window.removeEventListener("resize", handleResize)
++  }, [])
+ 
+   return (
+-    <nav className="navigation px-4 py-2">
+-      <section>
+-      <NavLink to="/"
+-        className={({ isActive }) => "logo-link" + (isActive ? " not-active" : "")}>
+-        <h1 className="text-3xl font-bold font-roca cursor-pointer">portfolio</h1>
+-      </NavLink>
+-      </section>
+-
+-      <section className="lg-links flex">
+-        <NavLink to="/" end className={({ isActive }) => isActive ? "active" : ""}>Home</NavLink>
+-        <NavLink to="/about" className={({ isActive }) => isActive ? "active" : ""}>About</NavLink>
+-        <NavLink to="/skills" className={({ isActive }) => isActive ? "active" : ""}>Skills</NavLink>
+-        <NavLink to="/education" className={({ isActive }) => isActive ? "active" : ""}>Education</NavLink>
+-        <NavLink to="/experience" className={({ isActive }) => isActive ? "active" : ""}>Experience</NavLink>
+-        {/* <NavLink to="/projects" className={({ isActive }) => isActive ? "active" : ""}>Projects</NavLink> */}
+-        <a onClick={() => openInNewTab("https://drive.google.com/file/d/1xJbom8gRsKgCb-3SwmjAEwX4smHXuByK/view?usp=drive_link")} download="Z.Desai-Resume.pdf">Resume</a>
+-        <div className="theme-toggle ml-2">
+-          <Toggle toggled={toggled} onClick={handleClick}/>
+-        </div>
+-      </section>
+-
+-      <section className="sm-active">
+-        <div className="menu-toggle" onClick={() => setOpen(!open)}>
+-          <GiHamburgerMenu size={25} className="cursor-pointer text-whitesmoke" />
+-        </div>
+-      </section>
+-
+-      <AnimatePresence>
+-  {open && (
+-    <motion.div
+-    className="sm-links"
+-    ref={menuRef}
+-    custom={menuHeight}
+-    initial="closed"
+-    animate="open"
+-    exit="closed"
+-    variants={sidebarVariants}
+-    style={{ overflow: "hidden" }}
+-  >
+-      <div>
+-            <section className="links flex flex-col items-center gap-2">
+-              <NavLink to="/" onClick={handleLinkClick}>Home</NavLink>
+-              <NavLink to="/about" onClick={handleLinkClick}>About</NavLink>
+-              <NavLink to="/skills" onClick={handleLinkClick}>Skills</NavLink>
+-              <NavLink to="/education" onClick={handleLinkClick}>Education</NavLink>
+-              <NavLink to="/experience" onClick={handleLinkClick}>Experience</NavLink>
+-              {/* <NavLink to="/projects" onClick={handleLinkClick}>Projects</NavLink>      */}
+-              <a onClick={() => openInNewTab("https://drive.google.com/file/d/1xJbom8gRsKgCb-3SwmjAEwX4smHXuByK/view?usp=drive_link")} download="Z.Desai-Resume.pdf">Resume</a>
+-              <div className="theme-toggle">
+-                <Toggle toggled={toggled} onClick={handleClick}/>
+-              </div>
+-            </section>
++    <header className="fixed top-0 left-0 right-0 z-[1000] flex justify-center px-4 pt-4">
++      <div className="w-full max-w-4xl">
++        {/* Pill nav */}
++        <nav
++          className="flex h-14 items-center justify-between gap-2 rounded-full border border-border bg-bg-secondary/75 px-2 shadow-card backdrop-blur-xl transition-all duration-300 sm:px-4"
++          aria-label="Primary"
++        >
++          {/* Logo */}
++          <NavLink
++            to="/"
++            className="flex-shrink-0 pl-3 font-heading text-lg font-bold tracking-tight sm:text-xl"
++            onClick={handleLinkClick}
++          >
++            <span className="bg-gradient-accent bg-clip-text text-transparent">
++              portfolio
++            </span>
++          </NavLink>
++
++          {/* Desktop links */}
++          <div className="hidden items-center gap-0.5 lg:flex">
++            {navLinks.map(({ to, label, end }) => (
++              <NavLink
++                key={to}
++                to={to}
++                end={end}
++                className="relative rounded-full px-3 py-1.5 text-sm font-medium transition-all duration-200"
++              >
++                {({ isActive }) => (
++                  <span
++                    className={
++                      isActive
++                        ? "relative z-[1] text-accent"
++                        : "text-text-secondary hover:text-text-primary"
++                    }
++                  >
++                    {label}
++                    {isActive && (
++                      <span
++                        className="absolute inset-0 -z-[1] rounded-full bg-bg-card/80"
++                        aria-hidden
++                      />
++                    )}
++                  </span>
++                )}
++              </NavLink>
++            ))}
++          </div>
++
++          {/* Right side: Resume + Toggle + Mobile hamburger */}
++          <div className="flex items-center gap-2 pr-1">
++            <button
++              type="button"
++              onClick={() => openInNewTab(RESUME_URL)}
++              className="hidden rounded-full px-3 py-1.5 text-sm font-medium text-text-secondary transition-colors hover:text-text-primary lg:block"
++            >
++              Resume
++            </button>
++
++            <div className="theme-toggle">
++              <Toggle
++                toggled={toggled}
++                onClick={() => setToggled((s) => !s)}
++                ariaLabel="Toggle dark mode"
++              />
+             </div>
+-          </motion.div>
+-        )}
+-      </AnimatePresence>
+-    </nav>
++
++            <button
++              type="button"
++              className="flex h-9 w-9 items-center justify-center rounded-full text-text-primary transition-colors hover:bg-bg-card lg:hidden"
++              onClick={() => setOpen(!open)}
++              aria-expanded={open}
++              aria-controls="mobile-menu"
++              aria-label={open ? "Close menu" : "Open menu"}
++            >
++              {open ? <IoClose size={20} /> : <GiHamburgerMenu size={18} />}
++            </button>
++          </div>
++        </nav>
++
++        {/* Mobile dropdown */}
++        <AnimatePresence>
++          {open && (
++            <motion.div
++              id="mobile-menu"
++              ref={menuRef}
++              custom={menuHeight}
++              initial="closed"
++              animate="open"
++              exit="closed"
++              variants={sidebarVariants}
++              className="mt-2 overflow-hidden rounded-2xl border border-border bg-bg-secondary/95 shadow-card backdrop-blur-xl lg:hidden"
++            >
++              <div className="flex flex-col gap-1 px-3 pb-4 pt-2">
++                {navLinks.map(({ to, label, end }) => (
++                  <NavLink
++                    key={to}
++                    to={to}
++                    end={end}
++                    onClick={handleLinkClick}
++                    className={({ isActive }) =>
++                      `rounded-xl px-4 py-3 text-base font-medium transition-colors ${
++                        isActive
++                          ? "bg-bg-card/80 text-accent"
++                          : "text-text-primary hover:bg-bg-card/60"
++                      }`
++                    }
++                  >
++                    {label}
++                  </NavLink>
++                ))}
++                <button
++                  type="button"
++                  onClick={() => {
++                    openInNewTab(RESUME_URL)
++                    handleLinkClick()
++                  }}
++                  className="rounded-xl px-4 py-3 text-left text-base font-medium text-text-primary transition-colors hover:bg-bg-card/60"
++                >
++                  Resume
++                </button>
++              </div>
++            </motion.div>
++          )}
++        </AnimatePresence>
++      </div>
++    </header>
+   )
+ }
+-
+-export default NavBar;
+diff --git a/src/components/PageWrapper.jsx b/src/components/PageWrapper.jsx
+new file mode 100644
+index 0000000..01865b3
+--- /dev/null
++++ b/src/components/PageWrapper.jsx
+@@ -0,0 +1,35 @@
++import { motion } from "framer-motion"
++import GridBackground from "./GridBackground"
++
++const pageVariants = {
++  initial: { opacity: 0, y: 20 },
++  animate: { opacity: 1, y: 0 },
++  exit: { opacity: 0, y: -12 },
++}
++
++export default function PageWrapper({
++  children,
++  className = "",
++  fullBleed = false,
++}) {
++  return (
++    <motion.main
++      role="main"
++      className={
++        fullBleed
++          ? `relative flex-1 w-full flex flex-col ${className}`
++          : `relative flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 md:pt-28 md:pb-20 ${className}`
++      }
++      variants={pageVariants}
++      initial="initial"
++      animate="animate"
++      exit="exit"
++      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
++    >
++      <GridBackground />
++      <div className="relative z-[1] flex flex-1 flex-col">
++        {children}
++      </div>
++    </motion.main>
++  )
++}
+diff --git a/src/components/Typewriter.jsx b/src/components/Typewriter.jsx
+index cea5a1f..fd537c2 100644
+--- a/src/components/Typewriter.jsx
++++ b/src/components/Typewriter.jsx
+@@ -1,24 +1,21 @@
+-import React from 'react';
+-import Typewriter from 'typewriter-effect';
++import Typewriter from "typewriter-effect"
+ 
+-function TypewriterEffect() {
+-    return (
+-        <div className='container'>
+-            <h1 className="font-decalotype text-4xl text-center tracking-wide">
+-                <Typewriter
+-                    options = {{
+-                        autoStart: true,
+-                        loop: true,
+-                        delay: 75,
+-                        strings: [
+-                            "I\'m a Project Manager",
+-                            "I\'m a Technical Consultant",
+-                        ]
+-                    }}>
+-                </Typewriter>
+-            </h1>
+-        </div>
+-    )
++export default function TypewriterEffect() {
++  return (
++    <div className="min-h-[3rem] md:min-h-[3.5rem]">
++      <p className="font-body text-2xl text-text-muted md:text-3xl">
++        <Typewriter
++          options={{
++            autoStart: true,
++            loop: true,
++            delay: 75,
++            strings: [
++              "I'm a Project Manager",
++              "I'm a Technical Consultant",
++            ],
++          }}
++        />
++      </p>
++    </div>
++  )
+ }
+-
+-export default TypewriterEffect;
+\ No newline at end of file
+diff --git a/src/data/knowledgeBase.js b/src/data/knowledgeBase.js
+new file mode 100644
+index 0000000..42f145d
+--- /dev/null
++++ b/src/data/knowledgeBase.js
+@@ -0,0 +1,152 @@
++const entries = [
++  {
++    keywords: ["who", "name", "zinal", "introduce", "yourself", "about you"],
++    response:
++      "Hi! I'm Zinal Desai, a Project Manager and Technical Consultant based in Dallas, TX. I bring structure, clarity, and momentum to complex work by aligning people, processes, and technology.",
++  },
++  {
++    keywords: ["role", "job", "title", "position", "what do you do", "pm", "project manager"],
++    response:
++      "Zinal is a Project Manager with a technical background in Software Engineering and Business Analytics. She specializes in ServiceNow platform implementations and Agile delivery.",
++  },
++  {
++    keywords: ["location", "where", "based", "live", "city", "dallas"],
++    response: "Zinal is based in Dallas, TX.",
++  },
++  {
++    keywords: ["experience", "work", "career", "history", "past roles"],
++    response:
++      "Zinal has worked at SB Events Co. as a Project Manager (delivering 100+ events), at Capital One through their Developer Academy supporting Agile delivery, and as a volunteer instructor at Code2College teaching Python and SQL.",
++  },
++  {
++    keywords: ["sb events", "events", "event management"],
++    response:
++      "At SB Events Co., Zinal managed 100+ concurrent large-scale, multicultural events. She coordinated 20+ vendors per event, built milestone tracking systems, and reduced operational conflicts by 25%.",
++  },
++  {
++    keywords: ["capital one", "developer academy", "agile delivery"],
++    response:
++      "At Capital One's Developer Academy, Zinal supported Agile delivery for enterprise applications — handling sprint planning, backlog refinement, and cross-team coordination within engineering teams.",
++  },
++  {
++    keywords: ["code2college", "teaching", "volunteer", "mentor", "instructor"],
++    response:
++      "At Code2College, Zinal volunteered as an instructor teaching Python and SQL through project-based learning, helping students break down projects into manageable tasks and reinforcing milestone planning.",
++  },
++  {
++    keywords: ["skill", "skills", "strengths", "good at", "capabilities"],
++    response:
++      "Zinal's core skills include Agile/Scrum methodologies, end-to-end project lifecycle management, stakeholder & vendor management, risk mitigation, SDLC coordination, and change management.",
++  },
++  {
++    keywords: ["tool", "tools", "software", "platform", "tech stack", "technologies"],
++    response:
++      "Zinal works with Jira, Asana, ServiceNow (ITSM/IRM/Flow Designer), Microsoft Office, Git, SQL, Python, and JavaScript.",
++  },
++  {
++    keywords: ["servicenow", "itsm", "irm", "flow designer", "csa", "cad"],
++    response:
++      "Zinal specializes in ServiceNow platform implementations with hands-on experience in ITSM, IRM, and Flow Designer. She holds both the Certified System Administrator (CSA) and Certified Application Developer (CAD) certifications.",
++  },
++  {
++    keywords: ["jira", "asana", "project tracking"],
++    response:
++      "Zinal uses Jira for sprint tracking, backlog management, and reporting, and Asana for project planning, milestones, and task coordination. She's also a certified Asana Workflow Specialist.",
++  },
++  {
++    keywords: ["education", "degree", "school", "university", "college", "study"],
++    response:
++      "Zinal holds a BS in Cognitive Science (Psychology/HCI) from UT Dallas (2018-2022), completed the Path2Tech Full Stack Developer Program at NPower, the RiseUp program at ServiceNow, and is currently pursuing an MBA with a Business Analytics concentration at Texas A&M - Corpus Christi (2026-2027).",
++  },
++  {
++    keywords: ["mba", "masters", "texas a&m", "business analytics"],
++    response:
++      "Zinal is pursuing an MBA with a concentration in Business Analytics at Texas A&M - Corpus Christi (Jan 2026 – May 2027).",
++  },
++  {
++    keywords: ["cognitive science", "hci", "human-computer", "psychology", "utd", "ut dallas"],
++    response:
++      "Zinal earned a BS in Cognitive Science with a concentration in Psychology/Human-Computer Interactions from The University of Texas at Dallas (2018–2022).",
++  },
++  {
++    keywords: ["certification", "certifications", "certified", "credential"],
++    response:
++      "Zinal holds: ServiceNow CSA, ServiceNow CAD, ServiceNow Flow Designer, Asana Workflow Specialist, and freeCodeCamp Responsive Web Design certifications.",
++  },
++  {
++    keywords: ["path2tech", "npower", "full stack", "bootcamp", "program"],
++    response:
++      "Zinal completed the Path2Tech Full Stack Developer Program at NPower (Oct 2024 – Apr 2025), focusing on team-based app development using Agile planning and collaboration.",
++  },
++  {
++    keywords: ["riseup", "servicenow training", "workflow implementation"],
++    response:
++      "Zinal completed ServiceNow's RiseUp program (Sept–Dec 2025), focusing on Agile project delivery and workflow implementation.",
++  },
++  {
++    keywords: ["contact", "email", "reach", "connect", "linkedin", "github"],
++    response:
++      "You can reach Zinal via email at desaizinal15@gmail.com, connect on LinkedIn at linkedin.com/in/zinaldesai, or check out her GitHub at github.com/zinaldesai.",
++  },
++  {
++    keywords: ["hobby", "hobbies", "fun", "free time", "outside work", "interests", "personal"],
++    response:
++      "Outside of work, Zinal enjoys baking, cooking new recipes, playing pickleball, and spending time with friends and family.",
++  },
++  {
++    keywords: ["agile", "scrum", "sprint", "retrospective", "ceremony"],
++    response:
++      "Zinal is experienced in Agile & Scrum methodologies including sprint planning, backlog refinement, retrospectives, and all Agile ceremonies. She applies these across both software delivery and operational projects.",
++  },
++  {
++    keywords: ["resume", "cv", "download"],
++    response:
++      "You can view or download Zinal's resume by clicking the 'View Resume' button on the home page, or the Resume link in the navigation.",
++  },
++  {
++    keywords: ["stakeholder", "vendor", "management", "communication"],
++    response:
++      "Zinal excels at cross-functional collaboration, stakeholder alignment, vendor coordination, executive-level reporting, and issue escalation & resolution. At SB Events, she coordinated 20+ vendors per event.",
++  },
++  {
++    keywords: ["impact", "achievement", "accomplish", "result"],
++    response:
++      "Key achievements: delivered 100+ projects on time at SB Events, reduced operational conflicts by 25%, improved delivery visibility at Capital One, and mentored students in structured project delivery at Code2College.",
++  },
++  {
++    keywords: ["approach", "methodology", "how", "process", "deliver"],
++    response:
++      "Zinal's delivery process: 1) Define scope & success metrics, 2) Align stakeholders & vendors, 3) Plan milestones & dependencies, 4) Track progress & risks, 5) Communicate & adapt, 6) Deliver outcomes & improve processes.",
++  },
++  {
++    keywords: ["hello", "hi", "hey", "greetings", "sup", "what's up"],
++    response:
++      "Hey there! I'm Zinal's AI assistant. Ask me anything about her experience, skills, education, or how to get in touch!",
++  },
++]
++
++const FALLBACK =
++  "I don't have specific info on that, but you can reach Zinal directly at desaizinal15@gmail.com or connect on LinkedIn at linkedin.com/in/zinaldesai."
++
++export function getResponse(userMessage) {
++  const input = userMessage.toLowerCase().trim()
++  if (!input) return FALLBACK
++
++  let bestMatch = null
++  let bestScore = 0
++
++  for (const entry of entries) {
++    let score = 0
++    for (const keyword of entry.keywords) {
++      if (input.includes(keyword)) {
++        score += keyword.length
++      }
++    }
++    if (score > bestScore) {
++      bestScore = score
++      bestMatch = entry
++    }
++  }
++
++  return bestScore > 0 ? bestMatch.response : FALLBACK
++}
+diff --git a/src/pages/About.jsx b/src/pages/About.jsx
+index 048fd21..49665f3 100644
+--- a/src/pages/About.jsx
++++ b/src/pages/About.jsx
+@@ -1,33 +1,91 @@
+-import Image from '../assets/pic.png';
++import { motion } from "framer-motion"
++import Image from "../assets/pic.png"
+ 
+-const firstName = 'Zinal';
+-const jobTitle = 'project manager';
+-const jobLocation = 'Dallas, TX';
+-const careerObjective = 'I\'m a Project Manager with a technical background in Software Engineering and Business Analytics. I focus on bringing structure, clarity, nad momentum to complex work by aligning people, processes, and technology.'
+-const experience = 'My experience includes leading end-to-end delivery for high-volume, high-stakes initiatives, supporting Agile software delivery in enterprise environments, and partnering closely with engineers, product teams, and external vendors. I\'ve designed and implemented project tracking systems to improve visibility, manage dependencies, and reduce operational friction.';
+-const goals = 'I\'m currently specializing in ServiceNow platform implementations, with hands-on experience in ITSM, IRM, and Flow Designer. My technical literacy in Python, SQL, JavaScript, and systems documentation allows me to collaborate effectively with technical teams while keeping delivery goals, timelines, and business outcomes front and center.';
+-const background = 'With a foundation in Cognitive Science and Human-Computer Interaction, and an MBA in progress with a concentration in Business Analytics, I approach project management with a user-first, data-informed mindset. I\'m driven by a desire to build processes and tools that don\'t just function well, but genuinely improve how people work.'
+-const freeTime = 'Outside of work, you\'ll usually find me baking or cooking something new, playing pickleball, or spending time with friends and family.';
++const firstName = "Zinal"
++const jobTitle = "project manager"
++const jobLocation = "Dallas, TX"
++const careerObjective =
++  "I'm a Project Manager with a technical background in Software Engineering and Business Analytics. I focus on bringing structure, clarity, and momentum to complex work by aligning people, processes, and technology."
++const experience =
++  "My experience includes leading end-to-end delivery for high-volume, high-stakes initiatives, supporting Agile software delivery in enterprise environments, and partnering closely with engineers, product teams, and external vendors. I've designed and implemented project tracking systems to improve visibility, manage dependencies, and reduce operational friction."
++const goals =
++  "I'm currently specializing in ServiceNow platform implementations, with hands-on experience in ITSM, IRM, and Flow Designer. My technical literacy in Python, SQL, JavaScript, and systems documentation allows me to collaborate effectively with technical teams while keeping delivery goals, timelines, and business outcomes front and center."
++const background =
++  "With a foundation in Cognitive Science and Human-Computer Interaction, and an MBA in progress with a concentration in Business Analytics, I approach project management with a user-first, data-informed mindset. I'm driven by a desire to build processes and tools that don't just function well, but genuinely improve how people work."
++const freeTime =
++  "Outside of work, you'll usually find me baking or cooking something new, playing pickleball, or spending time with friends and family."
+ 
+-const About = () => {
++const paragraphs = [careerObjective, experience, goals, background, freeTime]
++
++const blurFade = {
++  hidden: { opacity: 0, y: 12, filter: "blur(4px)" },
++  show: (i) => ({
++    opacity: 1,
++    y: 0,
++    filter: "blur(0px)",
++    transition: { delay: 0.1 * i, duration: 0.5, ease: [0.22, 1, 0.36, 1] },
++  }),
++}
++
++export default function About() {
+   return (
+-    <main className="about-container min-h-screen md:px-12 lg:px-16 mx-auto">
+-      <h1 className="title text-4xl font-bold mb-12 font-roca text-center mt-36">About</h1>
+-      <br />
+-      <section className='about-content-container'>
+-        <section className='image-container'>
+-          <img className='pic' src={Image} alt="picture" />
+-        </section>
+-        <section className='description-container font-decalotype tracking-wide pb-7'>
+-          <h2 className='text-xl font-medium font-decalotype tracking-wide'>Hi there! I'm {firstName}, a {jobTitle} based in {jobLocation}.</h2>
+-          <p>{careerObjective}</p>
+-          <p>{experience}</p>
+-          <p>{goals}</p>
+-          <p>{background}</p>
+-          <p>{freeTime}</p>
+-        </section>
+-      </section>
+-    </main>
++    <>
++      <header className="mb-12 text-center md:mb-16">
++        <h1 className="font-heading text-4xl font-bold tracking-tight text-text-primary md:text-5xl">
++          About
++        </h1>
++        <p className="mx-auto mt-4 max-w-2xl text-text-secondary md:text-lg">
++          People, process, and delivery — with a technical lens.
++        </p>
++      </header>
++
++      <div className="grid gap-12 lg:grid-cols-2 lg:items-start lg:gap-16">
++        <motion.div
++          className="relative mx-auto w-full max-w-md lg:mx-0 lg:max-w-none"
++          initial={{ opacity: 0, scale: 0.96 }}
++          animate={{ opacity: 1, scale: 1 }}
++          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
++        >
++          {/* Glow behind image */}
++          <div
++            className="absolute -inset-6 rounded-full bg-accent/10 blur-[60px]"
++            aria-hidden
++          />
++          <div className="relative rounded-3xl bg-gradient-accent p-[3px] shadow-card">
++            <div className="overflow-hidden rounded-[22px] bg-bg-secondary">
++              <img
++                className="h-auto w-full max-h-[520px] object-cover object-top"
++                src={Image}
++                alt="Zinal Desai"
++                loading="lazy"
++              />
++            </div>
++          </div>
++        </motion.div>
++
++        <div className="space-y-6 font-body text-text-secondary">
++          <motion.h2
++            className="text-xl font-semibold text-text-primary md:text-2xl"
++            initial={{ opacity: 0, y: 8, filter: "blur(4px)" }}
++            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
++            transition={{ duration: 0.5 }}
++          >
++            Hi there! I&apos;m {firstName}, a {jobTitle} based in {jobLocation}.
++          </motion.h2>
++          {paragraphs.map((text, i) => (
++            <motion.p
++              key={i}
++              custom={i}
++              variants={blurFade}
++              initial="hidden"
++              animate="show"
++              className="leading-relaxed md:text-lg"
++            >
++              {text}
++            </motion.p>
++          ))}
++        </div>
++      </div>
++    </>
+   )
+ }
+- export default About;
+\ No newline at end of file
+diff --git a/src/pages/Education.jsx b/src/pages/Education.jsx
+index d7be6fa..e53810c 100644
+--- a/src/pages/Education.jsx
++++ b/src/pages/Education.jsx
+@@ -1,113 +1,134 @@
+-import React from "react";
++import { motion } from "framer-motion"
+ 
+ const education = [
+-   {
++  {
+     date: "Jan 2026 - May 2027",
+     title: "Master's in Business Administration",
+     company: "Texas A&M - Corpus Christi",
+-    details: "Concentration in Business Analytics"
+-  }, 
++    details: "Concentration in Business Analytics",
++  },
+   {
+     date: "Sept 2025 - Dec 2025",
+     title: "RiseUp",
+     company: "ServiceNow",
+-    details: "Agile project delivery and workflow implementation"
++    details: "Agile project delivery and workflow implementation",
+   },
+   {
+     date: "Oct 2024 - Apr 2025",
+     title: "Path2Tech: Full Stack Developer Program",
+     company: "NPower",
+-    details: "Team-based app development using Agile planning and collaboration"
++    details: "Team-based app development using Agile planning and collaboration",
+   },
+   {
+     date: "Aug 2018 - May 2022",
+-    title: "Bachelor's of Science in Cognitive Science",
++    title: "Bachelor\u2019s of Science in Cognitive Science",
+     company: "The University of Texas at Dallas",
+-    details: "Concentration in Psychology/Human-Computer Interactions"
++    details: "Concentration in Psychology/Human-Computer Interactions",
+   },
+-];
++]
+ 
+ const certifications = [
+-    {
+-    date: "2026",
+-    title: "Certified System Administrator (CSA)",
+-    company: "ServiceNow",
+-  },
+-  {
+-    date: "2026",
+-    title: "Certified Application Developer (CAD)",
+-    company: "ServiceNow",
+-  },
+-  {
+-    date: "2025",
+-    title: "Flow Designer",
+-    company: "ServiceNow",
+-  },
+-  {
+-    date: "2025",
+-    title: "Workflow Specialist",
+-    company: "Asana",
+-  },
+-  {
+-    date: "2025",
+-    title: "Responsive Web Design",
+-    company: "freeCodeCamp",
+-  },
++  { date: "2026", title: "Certified System Administrator (CSA)", company: "ServiceNow" },
++  { date: "2026", title: "Certified Application Developer (CAD)", company: "ServiceNow" },
++  { date: "2025", title: "Flow Designer", company: "ServiceNow" },
++  { date: "2025", title: "Workflow Specialist", company: "Asana" },
++  { date: "2025", title: "Responsive Web Design", company: "freeCodeCamp" },
+ ]
+ 
+-export default function ExperienceTimeline() {
++export default function Education() {
+   return (
+-    <div className="education-container h-auto px-4 md:px-12 lg:px-16 py-10 max-w-5xl mx-auto pb-16">
+-      <h1 className="page-title text-5xl font-bold mb-12 font-roca text-center mt-36">Education & Professional Training</h1>
++    <>
++      <header className="mb-14 text-center md:mb-16">
++        <h1 className="font-heading text-4xl font-bold tracking-tight text-text-primary md:text-5xl">
++          Education &amp; Training
++        </h1>
++        <p className="mx-auto mt-4 max-w-2xl text-text-secondary md:text-lg">
++          Degrees, programs, and certifications that shape how I deliver.
++        </p>
++      </header>
+ 
+-      <div className="space-y-8 pb-16">
+-        {education.map((edu, index) => (
+-          <div key={index} className="relative flex flex-col sm:flex-row items-start sm:gap-6">
+-            
+-            {/* Date */}
+-            <div className="relative w-full sm:w-44 flex sm:justify-end mb-2 sm:mb-0">
+-              <span className="date bg-midnight text-whitesmoke px-3 py-1 sm:text-sm rounded whitespace-nowrap font-decalotype tracking-wider">
+-                {edu.date}
+-              </span>
+-            </div>
++      <section aria-labelledby="edu-heading" className="mb-20">
++        <h2 id="edu-heading" className="sr-only">
++          Education timeline
++        </h2>
++        <div className="relative">
++          <div
++            className="absolute left-[11px] top-2 bottom-2 w-px bg-gradient-to-b from-accent via-accent/50 to-transparent md:left-1/2 md:-translate-x-px"
++            aria-hidden
++          />
++
++          <ul className="space-y-10">
++            {education.map((edu, index) => (
++              <motion.li
++                key={edu.title}
++                initial={{ opacity: 0, y: 16 }}
++                whileInView={{ opacity: 1, y: 0 }}
++                viewport={{ once: true, margin: "-20px" }}
++                transition={{ duration: 0.4, delay: index * 0.06 }}
++                className="relative flex flex-col gap-4 pl-10 md:grid md:grid-cols-[1fr_auto_1fr] md:items-start md:gap-8 md:pl-0"
++              >
++                {/* Pulsing timeline dot */}
++                <span
++                  className="absolute left-0 top-2 flex h-[18px] w-[18px] items-center justify-center rounded-full border-2 border-accent bg-bg-primary shadow-[0_0_0_4px_var(--color-bg-primary)] animate-pulse-glow md:left-1/2 md:-translate-x-1/2"
++                  aria-hidden
++                >
++                  <span className="h-2 w-2 rounded-full bg-accent" />
++                </span>
+ 
+-            {/* Vertical Line */}
+-            <div className="line hidden sm:block w-px border-l-2 self-stretch"></div>
++                <div className="md:text-right">
++                  <span className="inline-block rounded-full bg-gradient-accent px-4 py-1.5 font-body text-xs font-semibold uppercase tracking-wider text-white shadow-md">
++                    {edu.date}
++                  </span>
++                </div>
+ 
+-            {/* Education Content */}
+-            <div className="flex-1">
+-              <h3 className="title text-lg sm:text-xl font-semibold font-decalotype tracking-wide">{edu.title}</h3>
+-              <p className="company text-sm sm:text-base font-medium mb-3 font-decalotype tracking-wide">{edu.company}</p>
+-              <p className="detail text-sm sm:text-base font-medium mb-3 font-decalotype tracking-wide">{edu.details}</p>
+-             
+-            </div>
+-          </div>
+-        ))}
+-      </div>
++                <div className="hidden md:block" aria-hidden />
+ 
+-      <h1 className="page-title text-5xl font-bold mb-12 font-roca text-center ">Certifications</h1>
+-      <div className="space-y-8">
+-        {certifications.map((cert, index) => (
+-          <div key={index} className="relative flex flex-col sm:flex-row items-start sm:gap-6">
++                <div className="rounded-2xl border border-border bg-bg-card/90 p-5 shadow-card backdrop-blur-md md:p-6">
++                  <h3 className="font-heading text-lg font-semibold text-text-primary md:text-xl">
++                    {edu.title}
++                  </h3>
++                  <p className="mt-1 font-medium text-accent">{edu.company}</p>
++                  <p className="mt-3 text-sm leading-relaxed text-text-secondary md:text-base">
++                    {edu.details}
++                  </p>
++                </div>
++              </motion.li>
++            ))}
++          </ul>
++        </div>
++      </section>
+ 
+-            {/* Date */}
+-            <div className="relative w-full sm:w-44 flex sm:justify-end mb-2 sm:mb-0">
+-              <span className="date bg-midnight text-whitesmoke px-3 py-1 sm:text-sm rounded whitespace-nowrap font-decalotype tracking-wider">
++      <section aria-labelledby="cert-heading">
++        <h2
++          id="cert-heading"
++          className="mb-8 text-center font-heading text-3xl font-bold text-text-primary md:text-4xl"
++        >
++          Certifications
++        </h2>
++        <p className="mb-10 text-center text-text-secondary">
++          Credentials that validate platform and delivery skills.
++        </p>
++        <ul className="flex flex-wrap justify-center gap-3 md:gap-4">
++          {certifications.map((cert, i) => (
++            <motion.li
++              key={`${cert.title}-${i}`}
++              initial={{ opacity: 0, scale: 0.96 }}
++              whileInView={{ opacity: 1, scale: 1 }}
++              viewport={{ once: true }}
++              transition={{ delay: i * 0.04, duration: 0.35 }}
++              className="shimmer-border rounded-full border border-border bg-bg-card/80 px-5 py-3 shadow-card backdrop-blur-sm transition-all duration-300 hover:border-accent/40 hover:shadow-glow"
++            >
++              <span className="block text-xs font-semibold text-accent">
+                 {cert.date}
+               </span>
+-            </div>
+-
+-            {/* Vertical Line */}
+-            <div className="line hidden sm:block w-px border-l-2 self-stretch "></div>
+-
+-            {/* Certifications Content */}
+-            <div className="flex-1">
+-              <h3 className="title text-lg sm:text-xl font-semibold font-decalotype tracking-wide">{cert.title}</h3>
+-              <p className="company text-sm sm:text-base font-medium font-decalotype tracking-wide">{cert.company}</p>
+-            </div>
+-          </div>
+-        ))}
+-      </div>
+-    </div>
+-  );
+-}
+\ No newline at end of file
++              <span className="block font-heading text-sm font-semibold text-text-primary">
++                {cert.title}
++              </span>
++              <span className="block text-xs text-text-muted">{cert.company}</span>
++            </motion.li>
++          ))}
++        </ul>
++      </section>
++    </>
++  )
++}
+diff --git a/src/pages/Experience.jsx b/src/pages/Experience.jsx
+index 2c1587e..74cfc64 100644
+--- a/src/pages/Experience.jsx
++++ b/src/pages/Experience.jsx
+@@ -1,178 +1,294 @@
+-import React from "react";
++import { useState } from "react"
++import { motion, AnimatePresence } from "framer-motion"
++import { FaCheck } from "react-icons/fa6"
++import { IoChevronDown } from "react-icons/io5"
+ 
+-const intro = "I approach project management as a balance of structure and adaptability. My experience spans high-complexity event delivery, Agile software environments, and team leadership, with a consistent focus on clarity, communication, and execution. I specialize in turning ambiguity into actionable plans, aligning diverse stakeholders, and building systems that help teams deliver reliably under changing conditions."
++const intro =
++  "I approach project management as a balance of structure and adaptability. My experience spans high-complexity event delivery, Agile software environments, and team leadership, with a consistent focus on clarity, communication, and execution. I specialize in turning ambiguity into actionable plans, aligning diverse stakeholders, and building systems that help teams deliver reliably under changing conditions."
+ 
+-const introFrame = "Below are selected experiences that highlight how I manage complexity, support cross-functional teams, and drive delivery across different environments:"
++const introFrame =
++  "Below are selected experiences that highlight how I manage complexity, support cross-functional teams, and drive delivery across different environments:"
+ 
+ const experiences = [
+   {
+     company: "SB Events Co.",
+     title: "Project Management Across High-Complexity, Multi-Stakeholder Events",
+-    context: "SB Events delivers large-scale, multicultural events across the U.S. and internationally. Projects often run concurrently, involve multiple vendors, and operate under tight timelines with high visibility.",
++    context:
++      "SB Events delivers large-scale, multicultural events across the U.S. and internationally. Projects often run concurrently, involve multiple vendors, and operate under tight timelines with high visibility.",
+     challenge: [
+       "Managing 100+ overlapping projects with shifting scopes",
+       "Coordinating 20+ external vendors per event",
+       "Ensuring timeline, budget, and quality expectations were consistently met",
+-      "Maintaining visibility and accountability across stakeholders"
++      "Maintaining visibility and accountability across stakeholders",
+     ],
+     role: "As a Project Manager, I owned end-to-end delivery from planning to execution. I focused on creating lightweight systems that made progress, risks, and dependencies visible to everyone involved.",
+     approach: [
+       "Designing milestone and dependency tracking systems to monitor progress across concurrent projects",
+       "Establishing communication rhythms with vendors and internal teams to surface issues early",
+       "Proactively managing change requests, resolving conflicts, and enforcing financial accountability",
+-      "Preparing executive-level reports and post-project analyses to inform future improvements"
++      "Preparing executive-level reports and post-project analyses to inform future improvements",
+     ],
+     skills: [
+       "Custom project trackers and milestone dashboards",
+       "Vendor coordination workflows",
+       "Risk identification and contingency planning",
+-      "Stakeholder reporting and retrospectives"
++      "Stakeholder reporting and retrospectives",
+     ],
+     impact: [
+       "Delivered 100+ projects on time despite overlapping timelines",
+       "Reduced operational conflicts by 25% through improved tracking and communication",
+-      "Increased vendor accountability and internal alignment"
++      "Increased vendor accountability and internal alignment",
+     ],
+     summary: [
+       "I thrive in complex, fast-moving environments",
+       "I prioritize proactive risk management over reactive problem-solving",
+-      "I build systems that scale as project volume increases"
+-    ]
++      "I build systems that scale as project volume increases",
++    ],
+   },
+   {
+     company: "Capital One",
+     title: "Supporting Agile Delivery in a Technical Environment",
+-    context: "As part of Capital One Developer Academy, I supported Agile delivery for enterprise-level applications within cross-functional engineering teams.",
++    context:
++      "As part of Capital One Developer Academy, I supported Agile delivery for enterprise-level applications within cross-functional engineering teams.",
+     challenge: [
+-      "Coordinating delivery across multiple teams and technical dependecies",
++      "Coordinating delivery across multiple teams and technical dependencies",
+       "Translating technical progress into clear, actionable updates",
+       "Supporting sprint planning while balancing scope, timelines, and risk",
+     ],
+-    role: "While developing as a software engineer, I gravitated toward delivery enablement and coordination—bridging the gap between engineering execution and project oversight.",
++    role: "While developing as a software engineer, I gravitated toward delivery enablement and coordination\u2014bridging the gap between engineering execution and project oversight.",
+     approach: [
+       "Supported sprint planning, backlog refinement, and Agile ceremonies",
+       "Partnered with engineers and product managers to track progress and delivery risks",
+       "Documented technical workflows and issues to improve team visibility",
+-      "Assisted with automation and reporting initiatives to streamline delivery"
++      "Assisted with automation and reporting initiatives to streamline delivery",
+     ],
+     skills: [
+       "Agile / Scrum workflows",
+       "Backlog and issue tracking tools",
+       "Git-based collaboration",
+-      "Technical documentation"
++      "Technical documentation",
+     ],
+     impact: [
+       "Improved clarity around dependencies and delivery timelines",
+       "Helped teams surface risks earlier in the sprint cycle",
+-      "Strengthened my ability to communicate effectively with technical stakeholders"
++      "Strengthened my ability to communicate effectively with technical stakeholders",
++    ],
++    summary: [
++      "This role strengthened my ability to operate as a project manager in technical environments \u2014 understanding how engineering teams work while keeping delivery goals front and center.",
+     ],
+-    summary: ["This role strengthened my ability to operate as a project manager in technical environments - understanding how engineering teams work while keeping delivery goals front and center."]
+   },
+   {
+     company: "Code2College",
+     title: "Leadership, Mentorship, and Delivery Through Teaching",
+-    context: "As a volunteer instructor, I taught Python and SQL using collaborative, project-based learning models.",
++    context:
++      "As a volunteer instructor, I taught Python and SQL using collaborative, project-based learning models.",
+     approach: [
+-      "Helping students break down projects into manageble tasks",
++      "Helping students break down projects into manageable tasks",
+       "Reinforcing milestone planning and deadline ownership",
+-      "Encouraging clear communication and teamwork"
++      "Encouraging clear communication and teamwork",
+     ],
+     skills: [
+       "Mentorship and leadership",
+       "Task prioritization and time management",
+-      "Facilitating progress with fixed timelines"
++      "Facilitating progress with fixed timelines",
+     ],
+-    summary: "This experience reinforced my belief that strong project management is rooted in clear expectations, continuous feedback, and support for team growth."
++    summary:
++      "This experience reinforced my belief that strong project management is rooted in clear expectations, continuous feedback, and support for team growth.",
++  },
++]
++
++function SectionDetails({ title, children, defaultOpen = true }) {
++  const [open, setOpen] = useState(defaultOpen)
++
++  return (
++    <details
++      className="group rounded-xl border border-border/80 bg-bg-secondary/40 open:bg-bg-card/60"
++      open={open}
++      onToggle={(e) => setOpen(e.target.open)}
++    >
++      <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-4 py-3 font-medium text-text-primary transition-colors hover:text-accent [&::-webkit-details-marker]:hidden">
++        {title}
++        <IoChevronDown
++          className="h-5 w-5 shrink-0 text-text-muted transition-transform group-open:rotate-180"
++          aria-hidden
++        />
++      </summary>
++      <div className="border-t border-border/60 px-4 pb-4 pt-2 text-text-secondary">
++        {children}
++      </div>
++    </details>
++  )
++}
++
++export default function Experience() {
++  // All experience cards expanded on first load so details are visible at a glance
++  const [expandedIds, setExpandedIds] = useState(
++    () => new Set(experiences.map((_, i) => i)),
++  )
++
++  const toggleCard = (index) => {
++    setExpandedIds((prev) => {
++      const next = new Set(prev)
++      if (next.has(index)) next.delete(index)
++      else next.add(index)
++      return next
++    })
+   }
+-];
+ 
+-export default function ExperienceTimeline() {
+   return (
+-   <div className="experience-container min-h-screen px-4 md:px-12 lg:px-16 py-10 max-w-5xl mx-auto pb-10">
+-      <h1 className="page-title text-5xl font-bold mb-10 font-roca text-center mt-36">Experience</h1>
+-      <p className="intro text-sm sm:text-base font-decalotype tracking-wide mb-6">{intro}</p>
+-      <p className="introForm text-sm sm:text-base font-decalotype tracking-wide mb-8">{introFrame}</p>
++    <>
++      <header className="mb-12 text-center md:mb-14">
++        <h1 className="font-heading text-4xl font-bold tracking-tight text-text-primary md:text-5xl">
++          Experience
++        </h1>
++        <p className="mx-auto mt-5 max-w-3xl text-left text-base leading-relaxed text-text-secondary md:text-center md:text-lg">
++          {intro}
++        </p>
++        <p className="mx-auto mt-4 max-w-2xl text-left text-sm text-text-muted md:text-center md:text-base">
++          {introFrame}
++        </p>
++      </header>
+ 
+-      <div className="space-y-16 pb-20">
++      <div className="space-y-8">
+         {experiences.map((exp, index) => (
+-          <div key={index} className="relative flex flex-col sm:flex-row items-start mb-16">
+-            <div className="flex-1 sm:pl-10 space-y-4">
+-              <h3 className="company text-sm sm:text-base font-semibold font-medium font-decalotype tracking-wide">{exp.company}</h3>
+-
+-              <p className="title text-lg sm:text-xl font-decalotype tracking-wide mb-3">{exp.title}</p>
+-
+-              <section>
+-                <strong>Context</strong>
+-                <p>{exp.context}</p>
+-              </section>
+-
+-              {exp.challenge && (
+-                <section>
+-                  <strong>The Challenge</strong>
+-                  <ul className="list-disc pl-5">
+-                    {exp.challenge.map((item, i) => (
+-                      <li key={i}>{item}</li>
+-                    ))}
+-                  </ul>
+-                </section>
+-              )}
++          <motion.article
++            key={exp.company}
++            initial={{ opacity: 0, y: 20 }}
++            whileInView={{ opacity: 1, y: 0 }}
++            viewport={{ once: true, margin: "-30px" }}
++            transition={{ duration: 0.45, delay: index * 0.05 }}
++            className="shimmer-border overflow-hidden rounded-2xl border border-border bg-bg-card/90 shadow-card backdrop-blur-md"
++          >
++            <div className="group border-b border-border/80 bg-bg-secondary/30 px-5 py-5 transition-colors duration-300 hover:bg-bg-secondary/50 md:px-8 md:py-6">
++              <p className="font-heading text-sm font-semibold uppercase tracking-wider text-accent">
++                {exp.company}
++              </p>
++              <h2 className="mt-2 font-heading text-xl font-semibold text-text-primary md:text-2xl">
++                {exp.title}
++              </h2>
++              <button
++                type="button"
++                className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-accent hover:text-accent-hover"
++                onClick={() => toggleCard(index)}
++                aria-expanded={expandedIds.has(index)}
++                aria-controls={`exp-panel-${index}`}
++                id={`exp-trigger-${index}`}
++              >
++                {expandedIds.has(index) ? "Hide details" : "Show details"}
++                <IoChevronDown
++                  className={`h-4 w-4 transition-transform ${expandedIds.has(index) ? "rotate-180" : ""}`}
++                  aria-hidden
++                />
++              </button>
++            </div>
+ 
+-              {exp.role && (
+-                <section>
+-                  <strong>My Role</strong>
+-                  <p>{exp.role}</p>
+-                </section>
+-              )}
++            <AnimatePresence initial={false}>
++              {expandedIds.has(index) && (
++                <motion.div
++                  id={`exp-panel-${index}`}
++                  role="region"
++                  aria-labelledby={`exp-trigger-${index}`}
++                  initial={{ height: 0, opacity: 0 }}
++                  animate={{ height: "auto", opacity: 1 }}
++                  exit={{ height: 0, opacity: 0 }}
++                  transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
++                  className="overflow-hidden"
++                >
++                  <div className="space-y-3 px-5 py-5 md:px-8 md:py-6">
++                    <SectionDetails title="Context">
++                      <p className="leading-relaxed">{exp.context}</p>
++                    </SectionDetails>
+ 
+-              {exp.approach && (
+-                <section>
+-                  <strong>Approach</strong>
+-                  <ul className="list-disc pl-5">
+-                    {exp.approach.map((item, i) => (
+-                      <li key={i}>{item}</li>
+-                    ))}
+-                  </ul>
+-                </section>
+-              )}
++                    {exp.challenge && (
++                      <SectionDetails title="The challenge">
++                        <ul className="list-disc space-y-2 pl-5">
++                          {exp.challenge.map((item, i) => (
++                            <li key={i}>{item}</li>
++                          ))}
++                        </ul>
++                      </SectionDetails>
++                    )}
+ 
+-              {exp.skills && (
+-                <section>
+-                  <strong>Tools & Practices</strong>
+-                  <ul className="list-disc pl-5">
+-                    {exp.skills.map((item, i) => (
+-                      <li key={i}>{item}</li>
+-                    ))}
+-                  </ul>
+-                </section>
+-              )}
++                    {exp.role && (
++                      <SectionDetails title="My role">
++                        <p className="leading-relaxed">{exp.role}</p>
++                      </SectionDetails>
++                    )}
+ 
+-              {exp.impact && (
+-                <section>
+-                  <strong>Impact</strong>
+-                  <ul className="list-disc pl-5">
+-                    {exp.impact.map((item, i) => (
+-                      <li key={i}>{item}</li>
+-                    ))}
+-                  </ul>
+-                </section>
+-              )}
++                    {exp.approach && (
++                      <SectionDetails title="Approach">
++                        <ul className="list-disc space-y-2 pl-5">
++                          {exp.approach.map((item, i) => (
++                            <li key={i}>{item}</li>
++                          ))}
++                        </ul>
++                      </SectionDetails>
++                    )}
+ 
+-              <section>
+-                <strong>Summary</strong>
+-                {Array.isArray(exp.summary) ? (
+-                  <ul className="list-disc pl-5">
+-                    {exp.summary.map((item, i) => (
+-                      <li key={i}>{item}</li>
+-                    ))}
+-                  </ul>
+-                ) : (
+-                  <p>{exp.summary}</p>
+-                )}
+-              </section>
+-            </div>
+-          </div>
++                    {exp.skills && (
++                      <div className="rounded-xl border border-border/60 bg-bg-secondary/30 px-4 py-4">
++                        <p className="mb-3 text-sm font-semibold text-text-primary">
++                          Tools &amp; practices
++                        </p>
++                        <ul className="flex flex-wrap gap-2">
++                          {exp.skills.map((skill, i) => (
++                            <li key={i}>
++                              <span className="inline-block rounded-full border border-border bg-bg-card px-3 py-1 text-xs font-medium text-text-secondary transition-colors hover:border-accent/40 hover:text-accent">
++                                {skill}
++                              </span>
++                            </li>
++                          ))}
++                        </ul>
++                      </div>
++                    )}
++
++                    {exp.impact && (
++                      <div className="rounded-xl border border-accent/20 bg-accent/5 px-4 py-4">
++                        <p className="mb-3 text-sm font-semibold text-text-primary">
++                          Impact
++                        </p>
++                        <ul className="space-y-2">
++                          {exp.impact.map((item, i) => (
++                            <motion.li
++                              key={i}
++                              className="flex gap-3 text-text-secondary"
++                              initial={{ opacity: 0, x: -8 }}
++                              whileInView={{ opacity: 1, x: 0 }}
++                              viewport={{ once: true }}
++                              transition={{ delay: i * 0.08 }}
++                            >
++                              <FaCheck
++                                className="mt-1 h-4 w-4 shrink-0 text-accent"
++                                aria-hidden
++                              />
++                              <span>{item}</span>
++                            </motion.li>
++                          ))}
++                        </ul>
++                      </div>
++                    )}
++
++                    <div className="rounded-xl border border-border/60 bg-bg-secondary/20 px-4 py-4">
++                      <p className="mb-2 text-sm font-semibold text-text-primary">
++                        Summary
++                      </p>
++                      {Array.isArray(exp.summary) ? (
++                        <ul className="list-disc space-y-2 pl-5 text-text-secondary">
++                          {exp.summary.map((item, i) => (
++                            <li key={i}>{item}</li>
++                          ))}
++                        </ul>
++                      ) : (
++                        <p className="text-text-secondary">{exp.summary}</p>
++                      )}
++                    </div>
++                  </div>
++                </motion.div>
++              )}
++            </AnimatePresence>
++          </motion.article>
+         ))}
+       </div>
+-    </div>
+-  );
++    </>
++  )
+ }
+diff --git a/src/pages/Home.jsx b/src/pages/Home.jsx
+index f02ebe4..24f5ea8 100644
+--- a/src/pages/Home.jsx
++++ b/src/pages/Home.jsx
+@@ -1,38 +1,148 @@
+-import { FaLinkedinIn } from "react-icons/fa6";
+-import { FaGithub } from "react-icons/fa";
+-import { IoIosMail } from "react-icons/io";
+-import TypewriterEffect from '../components/Typewriter';
++import { FaLinkedinIn } from "react-icons/fa6"
++import { FaGithub } from "react-icons/fa"
++import { IoIosMail } from "react-icons/io"
++import { motion } from "framer-motion"
++import TypewriterEffect from "../components/Typewriter"
++
++const fullName = "Zinal Desai"
++const personalQuote =
++  '"Whether you think you can or think you can\'t, either way you\'re right." \u2014 Henry Ford'
++
++const RESUME_URL =
++  "https://drive.google.com/file/d/1xJbom8gRsKgCb-3SwmjAEwX4smHXuByK/view?usp=drive_link"
+ 
+-const fullName = 'Zinal Desai';
+-const personalQuote = '"Whether you think you can or think you can\'t, either way you\'re right." - Henry Ford';
+ const openInNewTab = (url) => {
+-  window.open(url, "_blank", "noreferrer");
+-};
++  window.open(url, "_blank", "noreferrer")
++}
++
++const tags = ["Project Manager", "ServiceNow", "Agile", "SDLC"]
++
++const social = [
++  { label: "LinkedIn", icon: FaLinkedinIn, href: "https://www.linkedin.com/in/zinaldesai/", external: true },
++  { label: "GitHub", icon: FaGithub, href: "https://github.com/zinaldesai", external: true },
++  { label: "Email", icon: IoIosMail, href: "mailto:desaizinal15@gmail.com", external: false },
++]
++
++const container = {
++  hidden: { opacity: 0 },
++  show: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.05 } },
++}
++
++const item = {
++  hidden: { opacity: 0, y: 16 },
++  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } },
++}
+ 
+-const Home = () => {
++export default function Home() {
+   return (
+-    <main className="home-container min-h-screen flex flex-col justify-between">
+-      <section className="home-subsection flex-1 flex flex-col items-center text-center px-4">
+-        <h2 className="text-6xl md:text-7xl font-roca mb-4">{fullName}</h2>
+-        <TypewriterEffect/>
+-        <div className="flex gap-10 mt-6 ">
+-        <a onClick={() => openInNewTab("https://www.linkedin.com/in/zinaldesai/")}>
+-        <FaLinkedinIn size={35}/>
+-        </a>
+-        <a onClick={() => openInNewTab("https://github.com/zinaldesai")}>
+-        <FaGithub size={35}/>
+-        </a>
+-        <a href="mailto:desaizinal15@gmail.com">
+-        <IoIosMail size={35} />
+-        </a>
++    <div className="relative flex min-h-[calc(100vh-4rem)] flex-1 flex-col">
++      {/* Glow orbs */}
++      <div
++        className="pointer-events-none absolute left-1/2 top-[15%] h-[min(480px,50vh)] w-[min(720px,90vw)] -translate-x-1/2 rounded-full bg-accent/15 blur-[120px]"
++        aria-hidden
++      />
++      <div
++        className="pointer-events-none absolute bottom-[18%] left-[8%] h-64 w-64 rounded-full bg-purple-500/20 blur-[100px]"
++        aria-hidden
++      />
++      <div
++        className="pointer-events-none absolute right-[12%] top-[40%] h-40 w-40 rounded-full bg-gradient-accent opacity-15 blur-3xl"
++        aria-hidden
++      />
++
++      <motion.div
++        className="relative z-[1] flex flex-1 flex-col justify-center px-4 pb-12 pt-8 sm:px-8 md:px-12 lg:px-16"
++        variants={container}
++        initial="hidden"
++        animate="show"
++      >
++        <div className="mx-auto flex w-full max-w-4xl flex-col items-center text-center">
++          {/* Pill tag badges */}
++          <motion.div variants={item} className="mb-8 flex flex-wrap items-center justify-center gap-3">
++            {tags.map((tag) => (
++              <span
++                key={tag}
++                className="rounded-full border border-border px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] text-text-muted"
++              >
++                | {tag} |
++              </span>
++            ))}
++          </motion.div>
++
++          <motion.h1
++            variants={item}
++            className="font-heading text-5xl font-bold tracking-tight sm:text-6xl md:text-7xl lg:text-8xl"
++          >
++            <span className="bg-gradient-accent bg-clip-text text-transparent">
++              {fullName}
++            </span>
++          </motion.h1>
++
++          <motion.div variants={item} className="mt-6 w-full max-w-2xl">
++            <TypewriterEffect />
++          </motion.div>
++
++          <motion.p
++            variants={item}
++            className="mt-5 max-w-lg text-base text-text-secondary md:text-lg"
++          >
++            Thanks for stopping by — enjoy exploring!
++          </motion.p>
++
++          {/* Social icons */}
++          <motion.ul
++            variants={item}
++            className="mt-8 flex flex-wrap items-center justify-center gap-4"
++            aria-label="Social links"
++          >
++            {social.map(({ label, icon: Icon, href, external }) => {
++              const cls =
++                "group flex h-13 w-13 items-center justify-center rounded-2xl border border-border bg-bg-card/80 text-text-primary shadow-card backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-accent/40 hover:shadow-glow hover:animate-pulse-glow"
++              return (
++                <li key={label}>
++                  {external ? (
++                    <button
++                      type="button"
++                      onClick={() => openInNewTab(href)}
++                      className={cls}
++                      aria-label={`Open ${label} in a new tab`}
++                    >
++                      <Icon size={24} className="transition-transform group-hover:scale-110" aria-hidden />
++                    </button>
++                  ) : (
++                    <a href={href} className={cls} aria-label="Send email to Zinal Desai">
++                      <Icon size={24} className="transition-transform group-hover:scale-110" aria-hidden />
++                    </a>
++                  )}
++                </li>
++              )
++            })}
++          </motion.ul>
++
++          {/* CTA buttons */}
++          <motion.div variants={item} className="mt-10 flex flex-wrap items-center justify-center gap-4">
++            <button
++              type="button"
++              onClick={() => openInNewTab(RESUME_URL)}
++              className="inline-flex items-center justify-center rounded-full bg-gradient-accent px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-accent/20 transition-all duration-300 hover:scale-[1.03] hover:opacity-95"
++            >
++              View Resume
++            </button>
++            <a
++              href="mailto:desaizinal15@gmail.com"
++              className="inline-flex items-center justify-center rounded-full border border-border bg-bg-card/60 px-8 py-3 text-sm font-semibold text-text-primary backdrop-blur-sm transition-all duration-300 hover:border-accent/40 hover:text-accent"
++            >
++              Get in Touch
++            </a>
++          </motion.div>
+         </div>
+-        <p className="mt-6">Thanks for stopping by — enjoy exploring!</p>
+-      </section>
+-      <footer className="text-center">
+-      <p className="tracking-wide italic font-decalotype">{personalQuote}</p>
++      </motion.div>
++
++      <footer className="relative z-[1] border-t border-border px-4 py-8 sm:px-8">
++        <p className="mx-auto max-w-3xl text-center font-body text-sm italic leading-relaxed text-text-muted md:text-base">
++          {personalQuote}
++        </p>
+       </footer>
+-    </main>
++    </div>
+   )
+ }
+-
+-export default Home;
+\ No newline at end of file
+diff --git a/src/pages/NotFound.jsx b/src/pages/NotFound.jsx
+index 328df8f..f9ee54e 100644
+--- a/src/pages/NotFound.jsx
++++ b/src/pages/NotFound.jsx
+@@ -1,10 +1,32 @@
++import { Link } from "react-router-dom"
++import { motion } from "framer-motion"
+ 
+-const NotFound = () => {
++export default function NotFound() {
+   return (
+-    <main className="not-found-container">
+-    <h2>Error 404! Page Not Found</h2>
+-  </main>
++    <motion.div
++      className="flex flex-col items-center justify-center text-center"
++      initial={{ opacity: 0, y: 12 }}
++      animate={{ opacity: 1, y: 0 }}
++      transition={{ duration: 0.4 }}
++    >
++      <p
++        className="font-heading text-8xl font-bold leading-none tracking-tight md:text-9xl"
++        aria-hidden
++      >
++        <span className="bg-gradient-accent bg-clip-text text-transparent">404</span>
++      </p>
++      <h1 className="mt-6 font-heading text-2xl font-semibold text-text-primary md:text-3xl">
++        Page not found
++      </h1>
++      <p className="mt-3 max-w-md text-text-muted">
++        The page you&apos;re looking for doesn&apos;t exist or has been moved.
++      </p>
++      <Link
++        to="/"
++        className="mt-10 inline-flex items-center justify-center rounded-full bg-gradient-accent px-8 py-3 font-medium text-white shadow-lg shadow-accent/25 transition-transform duration-300 hover:scale-[1.02] hover:opacity-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
++      >
++        Back to home
++      </Link>
++    </motion.div>
+   )
+ }
+-
+-export default NotFound
+\ No newline at end of file
+diff --git a/src/pages/Skills.jsx b/src/pages/Skills.jsx
+index 7f54830..a1b5285 100644
+--- a/src/pages/Skills.jsx
++++ b/src/pages/Skills.jsx
+@@ -1,109 +1,137 @@
+-import React from "react";
+-
+-const SkillsSection = () => {
++import { motion } from "framer-motion"
++
++const sections = [
++  {
++    title: "Project Management & Delivery",
++    items: [
++      "Agile & Scrum methodologies (Sprint Planning, Retrospectives)",
++      "End-to-end project lifecycle management",
++      "Software Development Lifecycle (SDLC) coordination",
++      "Risk identification, dependency tracking, and issue resolution",
++      "Resource coordination and delivery prioritization",
++      "Change management and continuous improvement",
++    ],
++  },
++  {
++    title: "Stakeholder & Vendor Management",
++    items: [
++      "Cross-functional collaboration across technical and business teams",
++      "Stakeholder communication and alignment",
++      "Vendor coordination and performance management",
++      "Executive-level reporting and project updates",
++      "Issue escalation, resolution, and accountability tracking",
++      "Post-project reviews and operational analysis",
++    ],
++  },
++  {
++    title: "Tools & Platforms",
++    items: [
++      "Jira \u2014 sprint tracking, backlog management, reporting",
++      "Asana \u2014 project planning, milestones, task coordination",
++      "ServiceNow (ITSM / IRM) \u2014 workflow automation fundamentals",
++      "Microsoft Office (Excel, PowerPoint) \u2014 budgeting and presentations",
++      "Git \u2014 version control awareness and technical collaboration",
++    ],
++  },
++  {
++    title: "Technical & Analytical Literacy",
++    items: [
++      "SQL \u2014 data validation, reporting, and analysis",
++      "Python & JavaScript \u2014 technical fluency and automation awareness",
++      "Business analytics and metrics-driven decision making",
++      "Human-Computer Interaction (HCI) principles",
++      "Technical documentation and workflow mapping",
++    ],
++  },
++  {
++    title: "How I Deliver Projects",
++    ordered: true,
++    items: [
++      "Define scope, objectives, constraints, and success metrics",
++      "Align stakeholders, teams, and vendors",
++      "Plan milestones, sprints, and dependencies",
++      "Track progress, risks, and delivery performance",
++      "Communicate clearly and adapt execution",
++      "Deliver outcomes, document results, and improve processes",
++    ],
++  },
++]
++
++const listVariants = {
++  hidden: { opacity: 0 },
++  show: { opacity: 1, transition: { staggerChildren: 0.06 } },
++}
++
++const rowVariants = {
++  hidden: { opacity: 0, x: -8 },
++  show: { opacity: 1, x: 0 },
++}
++
++export default function Skills() {
+   return (
+-    <div className="skills-container py-10 px-6 md:px-20 h-auto pb-20">
+-      
+-      {/* Page Header */}
+-      <header className="max-w-4xl mx-auto text-center mb-20">
+-        <h1 className="title text-5xl font-bold mb-10 font-roca text-center mt-36">Project Management</h1>
+-        <p className="text-lg md:text-xl font-decalotype leading-relaxed text-slate-600">
++    <>
++      <header className="mb-14 text-center md:mb-16">
++        <h1 className="font-heading text-4xl font-bold tracking-tight text-text-primary md:text-5xl">
++          Project Management
++        </h1>
++        <p className="mx-auto mt-5 max-w-2xl text-lg text-text-secondary md:text-xl">
+           I manage projects by aligning people, processes, and tools to deliver
+           high-quality outcomes across operational and technical environments.
+         </p>
+-
+-        {/* Summary */}
+-        <p className="mt-6 text-sm uppercase tracking-widest text-slate-500">
+-          Agile • Scrum • SDLC • Jira • Asana • Stakeholder Management • Risk Mitigation
++        <p className="mt-6 text-xs font-medium uppercase tracking-[0.2em] text-text-muted md:text-sm">
++          Agile &middot; Scrum &middot; SDLC &middot; Jira &middot; Asana &middot; Stakeholder Management &middot; Risk Mitigation
+         </p>
+       </header>
+ 
+-      {/* Skills Container */}
+-      <section className="w-full max-w-5xl mx-auto space-y-10 font-decalotype">
+-
+-        {/* Sections */}
+-        <div>
+-          <h2 className="text-2xl font-semibold tracking-widest uppercase mb-4">
+-            Project Management & Delivery
+-          </h2>
+-          <div className="h-px w-24 bg-slate-300 mb-6"></div>
+-
+-          <ul className="grid md:grid-cols-2 gap-x-16 gap-y-4 text-lg leading-relaxed">
+-            <li>Agile & Scrum methodologies (Sprint Planning, Retrospectives)</li>
+-            <li>End-to-end project lifecycle management</li>
+-            <li>Software Development Lifecycle (SDLC) coordination</li>
+-            <li>Risk identification, dependency tracking, and issue resolution</li>
+-            <li>Resource coordination and delivery prioritization</li>
+-            <li>Change management and continuous improvement</li>
+-          </ul>
+-        </div>
+-
+-        <div>
+-          <h2 className="text-2xl font-semibold tracking-widest uppercase mb-4">
+-            Stakeholder & Vendor Management
+-          </h2>
+-          <div className="h-px w-24 bg-slate-300 mb-8"></div>
+-
+-          <ul className="grid md:grid-cols-2 gap-x-16 gap-y-4 text-lg leading-relaxed">
+-            <li>Cross-functional collaboration across technical and business teams</li>
+-            <li>Stakeholder communication and alignment</li>
+-            <li>Vendor coordination and performance management</li>
+-            <li>Executive-level reporting and project updates</li>
+-            <li>Issue escalation, resolution, and accountability tracking</li>
+-            <li>Post-project reviews and operational analysis</li>
+-          </ul>
+-        </div>
+-
+-        <div>
+-          <h2 className="text-2xl font-semibold tracking-widest uppercase mb-4">
+-            Tools & Platforms
+-          </h2>
+-          <div className="h-px w-24 bg-slate-300 mb-8"></div>
+-
+-          <ul className="grid md:grid-cols-2 gap-x-16 gap-y-4 text-lg leading-relaxed">
+-            <li>Jira — sprint tracking, backlog management, reporting</li>
+-            <li>Asana — project planning, milestones, task coordination</li>
+-            <li>ServiceNow (ITSM / IRM) — workflow automation fundamentals</li>
+-            <li>Microsoft Office (Excel, PowerPoint) — budgeting and presentations</li>
+-            <li>Git — version control awareness and technical collaboration</li>
+-          </ul>
+-        </div>
+-
+-        <div>
+-          <h2 className="text-2xl font-semibold tracking-widest uppercase mb-4">
+-            Technical & Analytical Literacy
+-          </h2>
+-          <div className="h-px w-24 bg-slate-300 mb-8"></div>
+-
+-          <ul className="grid md:grid-cols-2 gap-x-16 gap-y-4 text-lg leading-relaxed">
+-            <li>SQL — data validation, reporting, and analysis</li>
+-            <li>Python & JavaScript — technical fluency and automation awareness</li>
+-            <li>Business analytics and metrics-driven decision making</li>
+-            <li>Human-Computer Interaction (HCI) principles</li>
+-            <li>Technical documentation and workflow mapping</li>
+-          </ul>
+-        </div>
+-
+-        <div>
+-          <h2 className="text-2xl font-semibold tracking-widest uppercase mb-4">
+-            How I Deliver Projects
+-          </h2>
+-          <div className="h-px w-24 bg-slate-300 mb-8"></div>
+-
+-          <ol className="grid md:grid-cols-2 gap-x-16 gap-y-4 text-lg leading-relaxed">
+-            <li>Define scope, objectives, constraints, and success metrics</li>
+-            <li>Align stakeholders, teams, and vendors</li>
+-            <li>Plan milestones, sprints, and dependencies</li>
+-            <li>Track progress, risks, and delivery performance</li>
+-            <li>Communicate clearly and adapt execution</li>
+-            <li>Deliver outcomes, document results, and improve processes</li>
+-          </ol>
+-        </div>
+-
+-      </section>
+-    </div>
+-  );
+-};
+-
+-export default SkillsSection;
+-
++      <div className="space-y-8">
++        {sections.map((section, sIdx) => (
++          <motion.article
++            key={section.title}
++            initial={{ opacity: 0, y: 20 }}
++            whileInView={{ opacity: 1, y: 0 }}
++            viewport={{ once: true, margin: "-40px" }}
++            transition={{ duration: 0.45, delay: sIdx * 0.05, ease: [0.22, 1, 0.36, 1] }}
++            className="shimmer-border rounded-2xl border border-border bg-bg-card/90 p-6 shadow-card backdrop-blur-md transition-all duration-300 hover:shadow-glow md:p-8"
++          >
++            <div className="mb-6 flex items-center gap-3">
++              <span
++                className="h-8 w-1 shrink-0 rounded-full bg-gradient-accent animate-pulse-glow"
++                aria-hidden
++              />
++              <h2 className="font-heading text-xl font-semibold tracking-tight text-text-primary md:text-2xl">
++                {section.title}
++              </h2>
++            </div>
++
++            <motion.ul
++              variants={listVariants}
++              initial="hidden"
++              whileInView="show"
++              viewport={{ once: true }}
++              className={`grid gap-3 text-text-secondary md:gap-4 ${
++                section.items.length > 4 ? "md:grid-cols-2" : ""
++              }`}
++            >
++              {section.items.map((line, i) => (
++                <motion.li
++                  key={i}
++                  variants={rowVariants}
++                  className="flex gap-3 text-base leading-relaxed md:text-lg"
++                >
++                  <span
++                    className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent"
++                    aria-hidden
++                  />
++                  <span>
++                    {section.ordered ? `${i + 1}. ` : ""}
++                    {line}
++                  </span>
++                </motion.li>
++              ))}
++            </motion.ul>
++          </motion.article>
++        ))}
++      </div>
++    </>
++  )
++}
+diff --git a/src/styles/_variables.scss b/src/styles/_variables.scss
+deleted file mode 100644
+index c51014a..0000000
+--- a/src/styles/_variables.scss
++++ /dev/null
+@@ -1,5 +0,0 @@
+-$mobile: 640px;
+-$tablet: 768px;
+-$laptop: 1024px;
+-$desktop: 1280px;
+-$tv: 1440px;
+\ No newline at end of file
+diff --git a/src/styles/about.scss b/src/styles/about.scss
+deleted file mode 100644
+index 864f095..0000000
+--- a/src/styles/about.scss
++++ /dev/null
+@@ -1,76 +0,0 @@
+-.about-container {
+-  flex: 1;
+-  display: flex;
+-  flex-direction: column;
+-  align-items: center;
+-  min-height: 100vh;
+-  padding-top: 80px;
+-  padding-bottom: 100px;
+-  box-sizing: border-box;
+-
+-
+-  .title {
+-    font-size: 3rem;
+-    margin-bottom: 20px;
+-    font-weight: bold;
+-    text-align: center;
+-    margin-top: 90px;
+-  }
+-
+-  .about-content-container {
+-    display: flex;
+-    flex-direction: column;
+-    align-items: center;
+-    width: 100%;
+-    max-width: 1400px;
+-    padding: 0 20px;
+-    padding-bottom: 20px;
+-
+-    @media screen and (min-width: $laptop) {
+-      flex-direction: row;
+-      justify-content: space-between;
+-    }
+-
+-    .description-container {
+-      display: flex;
+-      flex-direction: column;
+-      align-items: flex-start;
+-      width: 100%;
+-      margin-bottom: 30px;
+-
+-      @media screen and (min-width: $laptop) {
+-        margin: 0 30px 0 0;
+-        width: 50%;
+-      }
+-
+-      .intro {
+-        font-size: 1.4rem;
+-      }
+-
+-      p {
+-        font-size: 1.2rem;
+-        margin-top: 16px;
+-        line-height: 1.6;
+-      }
+-    }
+-
+-    .image-container {
+-      width: 100%;
+-      display: flex;
+-      justify-content: center;
+-      align-items: center;
+-      margin-bottom: 30px;
+-
+-      @media screen and (min-width: $laptop) {
+-        width: 50%;
+-      }
+-
+-      .pic {
+-        width: 100%;
+-        height: auto;
+-        max-height: 500px;
+-        object-fit: contain;
+-      }
+-    }
+-  }
+-}
+diff --git a/src/styles/education.scss b/src/styles/education.scss
+deleted file mode 100644
+index 1891be1..0000000
+--- a/src/styles/education.scss
++++ /dev/null
+@@ -1,25 +0,0 @@
+-.education-container {
+-    .title {
+-      font-size: 25px;
+-    }
+-  
+-    .company {
+-      color: rgb(4, 182, 252);
+-      font-size: 22px;
+-      margin-top: 10px;
+-    }
+-  
+-    .date {
+-      font-size: 20px;
+-      padding: 6px;
+-    }
+-  
+-    .line {
+-      z-index: -1;
+-    }
+-  
+-    .detail {
+-      font-size: 18px;
+-    }
+-  }
+-  
+\ No newline at end of file
+diff --git a/src/styles/experience.scss b/src/styles/experience.scss
+deleted file mode 100644
+index 88f4971..0000000
+--- a/src/styles/experience.scss
++++ /dev/null
+@@ -1,22 +0,0 @@
+-.experience-container {
+-.title {
+-    font-size: 22px;
+-  }
+-
+-  .company {
+-    color: rgb(4, 182, 252);
+-    font-size: 24px;
+-  }
+-
+-  .line {
+-    z-index: -1;
+-  }
+-
+-  .introForm, .intro {
+-    font-size: 20px;
+-  }
+-
+-  .detail {
+-    font-size: 18px;
+-  }
+-}
+diff --git a/src/styles/home.scss b/src/styles/home.scss
+deleted file mode 100644
+index 49be4b4..0000000
+--- a/src/styles/home.scss
++++ /dev/null
+@@ -1,80 +0,0 @@
+-@font-face {
+-  font-family: 'RocaTwo';
+-  src: url('../assets/font/roca/RocaTwo-Bold.woff2') format('woff2'),
+-       url('../assets/font/roca/RocaTwo-Bold.woff') format('woff');
+-  font-weight: bold;
+-  font-style: normal;
+-  font-display: swap;
+-}
+-
+-@font-face {
+-  font-family: 'Decalotype-Regular';
+-  src: url('../assets/font/Decalotype-Regular.woff') format('woff');
+-}
+-
+-.font-decalotype {
+-  font-family: 'Decalotype-Regular', sans-serif;
+-}
+-
+-.font-roca {
+-  font-family: 'RocaTwo', sans-serif;
+-}
+-
+-.home-container {
+-  display: flex;
+-  flex-direction: column;
+-  min-height: 100vh;
+-  overflow-x: hidden;
+-  
+-  .home-subsection {
+-    flex: 1;
+-    padding-top: 80px;
+-    display: flex;
+-    flex-direction: column;
+-    justify-content: center;
+-    align-items: center;
+-
+-    @media screen and (min-width: $tablet) {
+-      padding-left: 70px;
+-      padding-right: 70px;
+-    }
+-    @media screen and (min-width: $laptop) {
+-      padding-left: 100px;
+-      padding-right: 100px;
+-    }
+-    .subsection-intro-header {
+-      font-size: 1.5rem;
+-    }
+-    .subsection-big-header {
+-      font-size: 2.5rem;
+-      margin-bottom: 10px;
+-    }
+-    .subsection-paragraph {
+-      margin-bottom: 15px;
+-      font-size: 1.2rem;
+-    }
+-
+-    .links {
+-      display: flex;
+-      justify-content: center;
+-      gap: 30px;
+-      margin-top: 20px;
+-      
+-    }
+-
+-    a:hover {
+-      color: blue;
+-    }
+-  }
+-
+-  .overview {
+-    background-color: whitesmoke;
+-  }
+-
+-  footer {
+-    padding: 1.5rem 0;
+-    margin-top: 0;
+-    padding-top: 0;
+-    font-size: 23px;
+-  }
+-}
+diff --git a/src/styles/index.scss b/src/styles/index.scss
+index 22b81a9..001c4c1 100644
+--- a/src/styles/index.scss
++++ b/src/styles/index.scss
+@@ -1,28 +1,166 @@
+-@import '_variables.scss';
+-@import 'about.scss';
+-@import 'experience.scss';
+-@import 'education.scss';
+-@import 'home.scss';
+-@import 'not-found.scss';
+-@import 'projects.scss';
+-@import 'nav-bar.scss';
+-@import '../Toggle/style.css';
+-
+-* {
++@font-face {
++  font-family: "RocaTwo";
++  src:
++    url("../assets/font/roca/RocaTwo-Bold.woff2") format("woff2"),
++    url("../assets/font/roca/RocaTwo-Bold.woff") format("woff");
++  font-weight: bold;
++  font-style: normal;
++  font-display: swap;
++}
++
++@font-face {
++  font-family: "Decalotype-Regular";
++  src: url("../assets/font/Decalotype-Regular.woff") format("woff");
++  font-weight: normal;
++  font-style: normal;
++  font-display: swap;
++}
++
++:root {
++  --color-bg-primary: #fafafa;
++  --color-bg-secondary: #f0f0f3;
++  --color-bg-card: rgba(255, 255, 255, 0.72);
++  --color-text-primary: #1a1a2e;
++  --color-text-secondary: #4a4a5c;
++  --color-text-muted: #6b6b7a;
++  --color-accent: #6366f1;
++  --color-accent-hover: #818cf8;
++  --color-accent-glow: rgba(99, 102, 241, 0.35);
++  --color-accent-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
++  --color-border: rgba(0, 0, 0, 0.08);
++  --color-nav-bg: rgba(250, 250, 250, 0.78);
++  --color-card-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
++  --font-heading: "RocaTwo", system-ui, sans-serif;
++  --font-body: "Decalotype-Regular", system-ui, sans-serif;
++}
++
++body.dark-mode {
++  --color-bg-primary: #0a0a0f;
++  --color-bg-secondary: #12121a;
++  --color-bg-card: rgba(20, 20, 32, 0.55);
++  --color-text-primary: #f0f0f5;
++  --color-text-secondary: #b8b8c8;
++  --color-text-muted: #7a7a8c;
++  --color-accent: #818cf8;
++  --color-accent-hover: #a5b4fc;
++  --color-accent-glow: rgba(129, 140, 248, 0.25);
++  --color-accent-gradient: linear-gradient(135deg, #6366f1 0%, #a78bfa 100%);
++  --color-border: rgba(255, 255, 255, 0.08);
++  --color-nav-bg: rgba(10, 10, 15, 0.72);
++  --color-card-shadow: 0 4px 32px rgba(0, 0, 0, 0.35);
++}
++
++*,
++*::before,
++*::after {
+   box-sizing: border-box;
+ }
+ 
+-body, html {
++html {
++  scroll-behavior: smooth;
++}
++
++body,
++html {
+   margin: 0;
+   padding: 0;
+   overflow-x: hidden;
+ }
++
++body {
++  font-family: var(--font-body);
++  background-color: var(--color-bg-primary);
++  color: var(--color-text-primary);
++  transition:
++    background-color 0.4s ease,
++    color 0.4s ease;
++}
++
++#root {
++  min-height: 100vh;
++}
++
+ .content-container {
+-  width: 100vw;
+-  height: 100vh;
++  width: 100%;
++  min-height: 100vh;
+   overflow-y: auto;
+   overflow-x: hidden;
+-  padding: 5;
+   display: flex;
+   flex-direction: column;
++  background-color: var(--color-bg-primary);
++  transition: background-color 0.4s ease;
++}
++
++/* Focus visibility for keyboard users */
++:focus-visible {
++  outline: 2px solid var(--color-accent);
++  outline-offset: 2px;
++}
++
++@media (prefers-reduced-motion: reduce) {
++  html {
++    scroll-behavior: auto;
++  }
++}
++
++/* Legacy font utility classes (Tailwind font-heading/body preferred) */
++.font-decalotype {
++  font-family: var(--font-body);
++}
++
++.font-roca {
++  font-family: var(--font-heading);
++}
++
++@import "../Toggle/style.css";
++
++/* Dot grid background pattern */
++.dot-grid {
++  background-image: radial-gradient(
++    circle,
++    var(--color-text-muted) 0.6px,
++    transparent 0.6px
++  );
++  background-size: 28px 28px;
++  opacity: 0.18;
++}
++
++/* Shimmer border effect for cards */
++.shimmer-border {
++  position: relative;
++  overflow: hidden;
++}
++.shimmer-border::before {
++  content: "";
++  position: absolute;
++  inset: 0;
++  border-radius: inherit;
++  padding: 1px;
++  background: linear-gradient(
++    90deg,
++    transparent 0%,
++    var(--color-accent) 50%,
++    transparent 100%
++  );
++  background-size: 200% 100%;
++  animation: shimmer 2.5s ease-in-out infinite;
++  mask:
++    linear-gradient(#fff 0 0) content-box,
++    linear-gradient(#fff 0 0);
++  mask-composite: exclude;
++  -webkit-mask:
++    linear-gradient(#fff 0 0) content-box,
++    linear-gradient(#fff 0 0);
++  -webkit-mask-composite: xor;
++  pointer-events: none;
++  opacity: 0;
++  transition: opacity 0.3s ease;
++}
++.shimmer-border:hover::before {
++  opacity: 1;
++}
++
++@keyframes shimmer {
++  0% { background-position: -200% 0; }
++  100% { background-position: 200% 0; }
+ }
+diff --git a/src/styles/nav-bar.scss b/src/styles/nav-bar.scss
+deleted file mode 100644
+index 2072f27..0000000
+--- a/src/styles/nav-bar.scss
++++ /dev/null
+@@ -1,99 +0,0 @@
+-.navigation {
+-  display: flex;
+-  justify-content: space-between;
+-  align-items: center;
+-  min-height: 100px;
+-  background-color: midnightblue;
+-  color: white;
+-  position: fixed;
+-  top: 0;
+-  left: 0;
+-  right: 0;
+-  z-index: 1000;
+-  height: 100px;
+-
+-  .lg-links {
+-    display: none;
+-    font-size: 1.2rem;
+-
+-    @media screen and (min-width: $laptop) {
+-      display: flex;
+-    }
+-
+-    a {
+-      margin: 0 10px;
+-      position: relative;
+-      text-decoration: none;
+-      color: inherit;
+-
+-      &::after {
+-        content: '';
+-        position: absolute;
+-        bottom: -3px;
+-        left: 0;
+-        width: 50%;
+-        height: 2px;
+-        background-color: skyblue;
+-        opacity: 0;
+-        transition: opacity 0.3s ease;
+-      }
+-
+-      &:hover {
+-        color: skyblue;
+-
+-        &::after {
+-          opacity: 1;
+-          width: 50%;
+-        }
+-      }
+-
+-      &.active::after {
+-        opacity: 1;
+-        width: 100%;
+-      }
+-    }
+-  }
+-
+-  .sm-active {
+-    display: flex;
+-
+-    @media screen and (min-width: $laptop) {
+-      display: none;
+-    }
+-  }
+-
+-  .sm-links {
+-    position: absolute;
+-    top: 100px; 
+-    left: 0;
+-    width: 100%;
+-    background-color: midnightblue;
+-    display: flex;
+-    flex-direction: column;
+-    align-items: center;
+-    z-index: 999;
+-    padding-bottom: 25px;
+-
+-    a {
+-      font-size: 1.2rem;
+-      color: whitesmoke;
+-      text-decoration: none;
+-    }
+-  }
+-
+-  .sm-links.active {
+-    max-height: 200px; 
+-    opacity: 1;
+-  }
+-
+-  a:hover {
+-    color: skyblue;
+-    text-decoration: none;
+-  }
+-
+-  button:hover {
+-    background-color: skyblue;
+-    color: whitesmoke;
+-    border: none;
+-  }
+-}
+\ No newline at end of file
+diff --git a/src/styles/not-found.scss b/src/styles/not-found.scss
+deleted file mode 100644
+index 81172f5..0000000
+--- a/src/styles/not-found.scss
++++ /dev/null
+@@ -1,9 +0,0 @@
+-.not-found-container {
+-  flex: 1;
+-  display: flex;
+-  justify-content: center;
+-  align-items: center;
+-  h2 {
+-    font-size: 3rem;
+-  }
+-}
+\ No newline at end of file
+diff --git a/tailwind.config.js b/tailwind.config.js
+index c2ca4f5..9a3f317 100644
+--- a/tailwind.config.js
++++ b/tailwind.config.js
+@@ -1,3 +1,4 @@
++/* eslint-env node */
+ /** @type {import('tailwindcss').Config} */
+ module.exports = {
+   content: [
+@@ -7,11 +8,71 @@ module.exports = {
+   theme: {
+     extend: {
+       colors: {
+-        midnight: '#191970',
+-        whitesmoke: '#F5F5F5',
+-        spacegray: 'rgb(32, 32, 32)',
+-      }
++        bg: {
++          primary: "var(--color-bg-primary)",
++          secondary: "var(--color-bg-secondary)",
++          card: "var(--color-bg-card)",
++        },
++        text: {
++          primary: "var(--color-text-primary)",
++          secondary: "var(--color-text-secondary)",
++          muted: "var(--color-text-muted)",
++        },
++        accent: {
++          DEFAULT: "var(--color-accent)",
++          hover: "var(--color-accent-hover)",
++        },
++        border: "var(--color-border)",
++        nav: "var(--color-nav-bg)",
++        midnight: "#191970",
++        whitesmoke: "#F5F5F5",
++        spacegray: "rgb(32, 32, 32)",
++      },
++      fontFamily: {
++        heading: ["RocaTwo", "system-ui", "sans-serif"],
++        body: ["Decalotype-Regular", "system-ui", "sans-serif"],
++      },
++      boxShadow: {
++        card: "var(--color-card-shadow)",
++        glow: "0 0 60px -12px var(--color-accent-glow)",
++      },
++      backgroundImage: {
++        "gradient-accent": "var(--color-accent-gradient)",
++      },
++      transitionDuration: {
++        theme: "400ms",
++      },
++      keyframes: {
++        "pulse-glow": {
++          "0%, 100%": { boxShadow: "0 0 8px 2px var(--color-accent-glow)" },
++          "50%": { boxShadow: "0 0 20px 6px var(--color-accent-glow)" },
++        },
++        shimmer: {
++          "0%": { backgroundPosition: "-200% 0" },
++          "100%": { backgroundPosition: "200% 0" },
++        },
++        "dot-drift": {
++          "0%": { transform: "translate(0, 0)" },
++          "50%": { transform: "translate(10px, 10px)" },
++          "100%": { transform: "translate(0, 0)" },
++        },
++        "bounce-dot": {
++          "0%, 80%, 100%": { transform: "scale(0)", opacity: "0.4" },
++          "40%": { transform: "scale(1)", opacity: "1" },
++        },
++        "fab-pulse": {
++          "0%, 100%": { boxShadow: "0 0 0 0 var(--color-accent-glow)" },
++          "50%": { boxShadow: "0 0 0 12px transparent" },
++        },
++      },
++      animation: {
++        "pulse-glow": "pulse-glow 2.5s ease-in-out infinite",
++        shimmer: "shimmer 2.5s ease-in-out infinite",
++        "dot-drift": "dot-drift 20s ease-in-out infinite",
++        "bounce-dot": "bounce-dot 1.4s ease-in-out infinite both",
++        "fab-pulse": "fab-pulse 2.5s ease-in-out infinite",
++      },
+     },
+   },
+   plugins: [],
+-}
+\ No newline at end of file
++}

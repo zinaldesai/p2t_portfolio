@@ -1,20 +1,26 @@
-import React from 'react';
-import './style.css';
+import "./style.css"
 
-export default function Toggle( {toggled, onClick} ) {
-    return (
-        <div onClick={onClick} className={`toggle${toggled ? " night" : ""}`}>
-            <div className="notch">
-                <div className="crater" />
-                <div className="crater" />
-                <div className="crater" />
-            </div>
-            <div>
-                <div className="shape sm" />
-                <div className="shape sm" />
-                <div className="shape md" />
-                <div className="shape lg" />
-            </div>
-        </div>
-    )
+export default function Toggle({ toggled, onClick, ariaLabel = "Toggle color theme" }) {
+  return (
+    <button
+      type="button"
+      className={`toggle${toggled ? " night" : ""}`}
+      onClick={onClick}
+      role="switch"
+      aria-checked={toggled}
+      aria-label={ariaLabel}
+    >
+      <span className="notch">
+        <span className="crater" />
+        <span className="crater" />
+        <span className="crater" />
+      </span>
+      <span className="block">
+        <span className="shape sm" />
+        <span className="shape sm" />
+        <span className="shape md" />
+        <span className="shape lg" />
+      </span>
+    </button>
+  )
 }

@@ -1,109 +1,137 @@
-import React from "react";
+import { motion } from "framer-motion"
 
-const SkillsSection = () => {
+const sections = [
+  {
+    title: "Project Management & Delivery",
+    items: [
+      "Agile & Scrum methodologies (Sprint Planning, Retrospectives)",
+      "End-to-end project lifecycle management",
+      "Software Development Lifecycle (SDLC) coordination",
+      "Risk identification, dependency tracking, and issue resolution",
+      "Resource coordination and delivery prioritization",
+      "Change management and continuous improvement",
+    ],
+  },
+  {
+    title: "Stakeholder & Vendor Management",
+    items: [
+      "Cross-functional collaboration across technical and business teams",
+      "Stakeholder communication and alignment",
+      "Vendor coordination and performance management",
+      "Executive-level reporting and project updates",
+      "Issue escalation, resolution, and accountability tracking",
+      "Post-project reviews and operational analysis",
+    ],
+  },
+  {
+    title: "Tools & Platforms",
+    items: [
+      "Jira \u2014 sprint tracking, backlog management, reporting",
+      "Asana \u2014 project planning, milestones, task coordination",
+      "ServiceNow (ITSM / IRM) \u2014 workflow automation fundamentals",
+      "Microsoft Office (Excel, PowerPoint, Access) \u2014 budgeting, presentations and data management",
+      "Git \u2014 version control awareness and technical collaboration",
+    ],
+  },
+  {
+    title: "Technical & Analytical Literacy",
+    items: [
+      "SQL \u2014 data validation, reporting, and analysis",
+      "Python & JavaScript \u2014 technical fluency and automation awareness",
+      "Business analytics and metrics-driven decision making",
+      "Human-Computer Interaction (HCI) principles",
+      "Technical documentation and workflow mapping",
+    ],
+  },
+  {
+    title: "How I Deliver Projects",
+    ordered: true,
+    items: [
+      "Define scope, objectives, constraints, and success metrics",
+      "Align stakeholders, teams, and vendors",
+      "Plan milestones, sprints, and dependencies",
+      "Track progress, risks, and delivery performance",
+      "Communicate clearly and adapt execution",
+      "Deliver outcomes, document results, and improve processes",
+    ],
+  },
+]
+
+const listVariants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.06 } },
+}
+
+const rowVariants = {
+  hidden: { opacity: 0, x: -8 },
+  show: { opacity: 1, x: 0 },
+}
+
+export default function Skills() {
   return (
-    <div className="skills-container py-10 px-6 md:px-20 h-auto pb-20">
-      
-      {/* Page Header */}
-      <header className="max-w-4xl mx-auto text-center mb-20">
-        <h1 className="title text-5xl font-bold mb-10 font-roca text-center mt-36">Project Management</h1>
-        <p className="text-lg md:text-xl font-decalotype leading-relaxed text-slate-600">
+    <>
+      <header className="mb-14 text-center md:mb-16">
+        <h1 className="font-heading text-4xl font-bold tracking-tight text-text-primary md:text-5xl">
+          Project Management
+        </h1>
+        <p className="mx-auto mt-5 max-w-2xl text-lg text-text-secondary md:text-xl">
           I manage projects by aligning people, processes, and tools to deliver
           high-quality outcomes across operational and technical environments.
         </p>
-
-        {/* Summary */}
-        <p className="mt-6 text-sm uppercase tracking-widest text-slate-500">
-          Agile • Scrum • SDLC • Jira • Asana • Stakeholder Management • Risk Mitigation
+        <p className="mt-6 text-xs font-medium uppercase tracking-[0.2em] text-text-muted md:text-sm">
+          Agile &middot; Scrum &middot; SDLC &middot; Jira &middot; Asana &middot; Stakeholder Management &middot; Risk Mitigation
         </p>
       </header>
 
-      {/* Skills Container */}
-      <section className="w-full max-w-5xl mx-auto space-y-10 font-decalotype">
+      <div className="space-y-8">
+        {sections.map((section, sIdx) => (
+          <motion.article
+            key={section.title}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.45, delay: sIdx * 0.05, ease: [0.22, 1, 0.36, 1] }}
+            className="shimmer-border rounded-2xl border border-border bg-bg-card/90 p-6 shadow-card backdrop-blur-md transition-all duration-300 hover:shadow-glow md:p-8"
+          >
+            <div className="mb-6 flex items-center gap-3">
+              <span
+                className="h-8 w-1 shrink-0 rounded-full bg-gradient-accent animate-pulse-glow"
+                aria-hidden
+              />
+              <h2 className="font-heading text-xl font-semibold tracking-tight text-text-primary md:text-2xl">
+                {section.title}
+              </h2>
+            </div>
 
-        {/* Sections */}
-        <div>
-          <h2 className="text-2xl font-semibold tracking-widest uppercase mb-4">
-            Project Management & Delivery
-          </h2>
-          <div className="h-px w-24 bg-slate-300 mb-6"></div>
-
-          <ul className="grid md:grid-cols-2 gap-x-16 gap-y-4 text-lg leading-relaxed">
-            <li>Agile & Scrum methodologies (Sprint Planning, Retrospectives)</li>
-            <li>End-to-end project lifecycle management</li>
-            <li>Software Development Lifecycle (SDLC) coordination</li>
-            <li>Risk identification, dependency tracking, and issue resolution</li>
-            <li>Resource coordination and delivery prioritization</li>
-            <li>Change management and continuous improvement</li>
-          </ul>
-        </div>
-
-        <div>
-          <h2 className="text-2xl font-semibold tracking-widest uppercase mb-4">
-            Stakeholder & Vendor Management
-          </h2>
-          <div className="h-px w-24 bg-slate-300 mb-8"></div>
-
-          <ul className="grid md:grid-cols-2 gap-x-16 gap-y-4 text-lg leading-relaxed">
-            <li>Cross-functional collaboration across technical and business teams</li>
-            <li>Stakeholder communication and alignment</li>
-            <li>Vendor coordination and performance management</li>
-            <li>Executive-level reporting and project updates</li>
-            <li>Issue escalation, resolution, and accountability tracking</li>
-            <li>Post-project reviews and operational analysis</li>
-          </ul>
-        </div>
-
-        <div>
-          <h2 className="text-2xl font-semibold tracking-widest uppercase mb-4">
-            Tools & Platforms
-          </h2>
-          <div className="h-px w-24 bg-slate-300 mb-8"></div>
-
-          <ul className="grid md:grid-cols-2 gap-x-16 gap-y-4 text-lg leading-relaxed">
-            <li>Jira — sprint tracking, backlog management, reporting</li>
-            <li>Asana — project planning, milestones, task coordination</li>
-            <li>ServiceNow (ITSM / IRM) — workflow automation fundamentals</li>
-            <li>Microsoft Office (Excel, PowerPoint) — budgeting and presentations</li>
-            <li>Git — version control awareness and technical collaboration</li>
-          </ul>
-        </div>
-
-        <div>
-          <h2 className="text-2xl font-semibold tracking-widest uppercase mb-4">
-            Technical & Analytical Literacy
-          </h2>
-          <div className="h-px w-24 bg-slate-300 mb-8"></div>
-
-          <ul className="grid md:grid-cols-2 gap-x-16 gap-y-4 text-lg leading-relaxed">
-            <li>SQL — data validation, reporting, and analysis</li>
-            <li>Python & JavaScript — technical fluency and automation awareness</li>
-            <li>Business analytics and metrics-driven decision making</li>
-            <li>Human-Computer Interaction (HCI) principles</li>
-            <li>Technical documentation and workflow mapping</li>
-          </ul>
-        </div>
-
-        <div>
-          <h2 className="text-2xl font-semibold tracking-widest uppercase mb-4">
-            How I Deliver Projects
-          </h2>
-          <div className="h-px w-24 bg-slate-300 mb-8"></div>
-
-          <ol className="grid md:grid-cols-2 gap-x-16 gap-y-4 text-lg leading-relaxed">
-            <li>Define scope, objectives, constraints, and success metrics</li>
-            <li>Align stakeholders, teams, and vendors</li>
-            <li>Plan milestones, sprints, and dependencies</li>
-            <li>Track progress, risks, and delivery performance</li>
-            <li>Communicate clearly and adapt execution</li>
-            <li>Deliver outcomes, document results, and improve processes</li>
-          </ol>
-        </div>
-
-      </section>
-    </div>
-  );
-};
-
-export default SkillsSection;
-
+            <motion.ul
+              variants={listVariants}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
+              className={`grid gap-3 text-text-secondary md:gap-4 ${
+                section.items.length > 4 ? "md:grid-cols-2" : ""
+              }`}
+            >
+              {section.items.map((line, i) => (
+                <motion.li
+                  key={i}
+                  variants={rowVariants}
+                  className="flex gap-3 text-base leading-relaxed md:text-lg"
+                >
+                  <span
+                    className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent"
+                    aria-hidden
+                  />
+                  <span>
+                    {section.ordered ? `${i + 1}. ` : ""}
+                    {line}
+                  </span>
+                </motion.li>
+              ))}
+            </motion.ul>
+          </motion.article>
+        ))}
+      </div>
+    </>
+  )
+}
